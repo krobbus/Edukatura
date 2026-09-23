@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import { capitalizeFirstLetter } from '../utils/text.js';
 
 const assignmentSchema = new mongoose.Schema(
     {
-        class: {
+        course: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Class',
+            ref: 'Course',
             required: true,
         },
         module: {
@@ -16,10 +17,12 @@ const assignmentSchema = new mongoose.Schema(
             type: String,
             required: true,
             maxlength: 100,
+            set: capitalizeFirstLetter,
         },
         description: {
             type: String,
             required: true,
+            set: capitalizeFirstLetter,
         },
         dueDate: {
             type: Date,

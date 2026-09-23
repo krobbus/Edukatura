@@ -6,7 +6,7 @@ import connectDB from './config/db.js';
 import errorHandler from './middleware/errorMiddleware.js';
 
 import authRoutes from './routes/authRoutes.js';
-import classRoutes from './routes/classRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
 import enrollmentRoutes from './routes/enrollmentRoutes.js';
 import moduleRoutes from './routes/moduleRoutes.js';
 import assignmentRoutes from './routes/assignmentRoutes.js';
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/classes', classRoutes);
+app.use('/api/courses', courseRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/assignments', assignmentRoutes);

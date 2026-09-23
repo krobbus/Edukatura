@@ -3,7 +3,7 @@ import verifyToken from '../middleware/authMiddleware.js';
 import {
     createEnrollment,
     getMyEnrollments,
-    getEnrollmentsForClass,
+    getEnrollmentsForCourse,
     deleteEnrollment
 } from '../controllers/enrollmentController.js';
 
@@ -14,7 +14,7 @@ router.use(verifyToken);
 router.get('/my', getMyEnrollments);
 
 router.route('/')
-    .get(getEnrollmentsForClass)
+    .get(getEnrollmentsForCourse)
     .post(createEnrollment);
 
 router.delete('/:id', deleteEnrollment);

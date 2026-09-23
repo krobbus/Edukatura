@@ -1,12 +1,15 @@
 import mongoose from 'mongoose';
 import { capitalizeFirstLetter } from '../utils/text.js';
 
-const moduleSchema = new mongoose.Schema(
+const courseSchema = new mongoose.Schema(
     {
-        course: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Course',
+        courseCode: {
+            type: String,
             required: true,
+            unique: true,
+            maxlength: 10,
+            trim: true,
+            set: (value) => value?.toUpperCase(),
         },
         title: {
             type: String,
@@ -18,18 +21,18 @@ const moduleSchema = new mongoose.Schema(
             type: String,
             set: capitalizeFirstLetter,
         },
-        createdBy: {
+        faculty: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
     },
-    { 
-        timestamps: { 
+    {
+        timestamps: {
             createdAt: 'createdAt',
-            updatedAt: false 
-        } 
+            updatedAt: false
+        }
     }
 );
 
-export default mongoose.model('Module', moduleSchema);
+export default mongoose.model('Course', courseSchema);

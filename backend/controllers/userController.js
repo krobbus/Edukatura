@@ -26,3 +26,25 @@ export const updateUserRole = asyncHandler(async (req, res) => {
 
     res.json(user);
 });
+
+export const updateUser = asyncHandler(async (req, res) => {
+    const { firstName, middleName, lastName, email, role, createdAt } = req.body;
+
+    if (!['student', 'faculty', 'admin'].includes(role)) {
+        res.status(400);
+        throw new Error('Invalid role');
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.params.id,
+        { firstName, middleName: middleName || undefined, lastName, email, role, createdAt },
+        { new: true, runValidators: true }
+    ).select('-passwordHash');
+
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
+
+    res.json(user);
+});

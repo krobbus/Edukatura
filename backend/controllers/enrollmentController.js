@@ -2,30 +2,30 @@ import asyncHandler from '../utils/asyncHandler.js';
 import { Enrollment } from '../models/index.js';
 
 export const createEnrollment = asyncHandler(async (req, res) => {
-    const classId = req.body.class ?? req.body.classId;
+    const courseId = req.body.course ?? req.body.courseId;
 
-    const existing = await Enrollment.findOne({ class: classId, student: req.user._id });
+    const existing = await Enrollment.findOne({ course: courseId, student: req.user._id });
     if (existing) {
         res.status(400);
-        throw new Error('Already enrolled in this class');
+        throw new Error('Already enrolled in this course');
     }
 
-    const enrollment = await Enrollment.create({ class: classId, student: req.user._id });
+    const enrollment = await Enrollment.create({ course: courseId, student: req.user._id });
     res.status(201).json(enrollment);
 });
 
 export const getMyEnrollments = asyncHandler(async (req, res) => {
-    const enrollments = await Enrollment.find({ student: req.user._id }).populate('class', 'classCode title');
+    const enrollments = await Enrollment.find({ student: req.user._id }).populate('course', 'courseCode title');
     res.json(enrollments);
 });
 
-export const getEnrollmentsForClass = asyncHandler(async (req, res) => {
-    if (!req.query.class) {
+export const getEnrollmentsForCourse = asyncHandler(async (req, res) => {
+    if (!req.query.course) {
         res.status(400);
-        throw new Error('class query param is required');
+        throw new Error('course query param is required');
     }
 
-    const enrollments = await Enrollment.find({ class: req.query.class }).populate('student', 'firstName lastName email');
+    const enrollments = await Enrollment.find({ course: req.query.course }).populate('student', 'firstName lastName email');
     res.json(enrollments);
 });
 

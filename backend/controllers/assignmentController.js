@@ -2,9 +2,9 @@ import asyncHandler from '../utils/asyncHandler.js';
 import { Assignment } from '../models/index.js';
 
 export const createAssignment = asyncHandler(async (req, res) => {
-    const { class: classId, module, title, description, dueDate, maxPoints } = req.body;
+    const { course: courseId, module, title, description, dueDate, maxPoints } = req.body;
     const assignment = await Assignment.create({
-        class: classId,
+        course: courseId,
         module: module || null,
         title,
         description,
@@ -17,7 +17,7 @@ export const createAssignment = asyncHandler(async (req, res) => {
 });
 
 export const getAssignments = asyncHandler(async (req, res) => {
-    const filter = req.query.class ? { class: req.query.class } : {};
+    const filter = req.query.course ? { course: req.query.course } : {};
     const assignments = await Assignment.find(filter).populate('module', 'title');
 
     res.json(assignments);

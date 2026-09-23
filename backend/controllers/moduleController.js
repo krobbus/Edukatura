@@ -2,9 +2,9 @@ import asyncHandler from '../utils/asyncHandler.js';
 import { Module } from '../models/index.js';
 
 export const createModule = asyncHandler(async (req, res) => {
-    const { class: classId, title, description } = req.body;
+    const { course: courseId, title, description } = req.body;
     const newModule = await Module.create({
-        class: classId,
+        course: courseId,
         title,
         description,
         createdBy: req.user._id
@@ -14,7 +14,7 @@ export const createModule = asyncHandler(async (req, res) => {
 });
 
 export const getModules = asyncHandler(async (req, res) => {
-    const filter = req.query.class ? { class: req.query.class } : {};
+    const filter = req.query.course ? { course: req.query.course } : {};
     const modules = await Module.find(filter).populate('createdBy', 'firstName lastName');
 
     res.json(modules);
