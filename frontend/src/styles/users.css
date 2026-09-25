@@ -1,0 +1,141 @@
+.usersPage {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    header {
+        margin-bottom: 1.5rem;
+
+        h1 {
+            color: var(--secondary);
+            font-family: var(--headings);
+            font-size: clamp(2rem, 3vw, 2.4rem);
+            letter-spacing: -0.03em;
+        }
+
+        p {
+            color: var(--muted);
+        }
+    }
+
+    .userSearch {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        input {
+            flex: 1;
+            height: 2rem;
+            padding: 1.2rem 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 6px;
+        }
+
+        select{
+            padding: 0 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 6px;
+        }
+    }
+
+    .userTableContainer {
+        overflow-x: auto;
+        background: #fff;
+        border: 1px solid var(--highlight);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+
+            thead tr{
+                th {
+                    background: #f8faf9;
+                    color: var(--muted);
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    letter-spacing: 0.05em;
+                    text-transform: uppercase;
+                    padding: 1rem 1.2rem;
+                    text-align: left;
+                    border-bottom: 1px solid var(--highlight);
+
+                    &:last-child { text-align: center; }
+                }
+            }
+
+            tbody tr {
+                &:hover { background: #f8faf9; }
+
+                td{
+                    padding: 1rem 1.2rem;
+                    text-align: left;
+                    border-bottom: 1px solid var(--highlight);
+
+                    &:nth-child(2), &:nth-child(3) { 
+                        color: var(--muted);
+                    }
+
+                    input {
+                        width: 100%;
+                        min-width: 6rem;
+                        padding: 0.5rem 0.6rem;
+                        border: 0;
+                        border-bottom: 1px solid var(--muted);
+                        background: transparent;
+                        color: var(--shadow);
+                    }
+
+                    .userNameFields {
+                        display: flex;
+                        gap: 0.35rem;
+
+                        input {
+                            width: 100%;
+                            min-width: 6rem;
+                            padding: 0.35rem 0.4rem;
+                            border: 0;
+                            border-bottom: 1px solid var(--muted);
+                            background: transparent;
+                            color: var(--shadow);
+                        }
+                    }
+
+                    .userRoleActions {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        select {
+                            min-width: 8rem;
+                            padding: 0.5rem;
+                            border: 1px solid #cbd5e1;
+                            border-radius: 6px;
+                            background: #fff;
+                            color: var(--shadow);
+                            text-transform: capitalize;
+                        }
+
+                        button {
+                            padding: 0.5rem 1rem;
+                            background: transparent;
+                            cursor: pointer;
+                            font-weight: 700;
+                            border: none;
+                            color: var(--main);
+
+                            &:hover:not(:disabled) { background: rgba(42, 107, 92, 0.08); }
+                        }
+
+                        .cancelButton {
+                            color: var(--danger);
+                            &:hover:not(:disabled) { background: rgba(204, 57, 57, 0.08); }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
