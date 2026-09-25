@@ -10,6 +10,7 @@ import courseRoutes from './routes/courseRoutes.js';
 import enrollmentRoutes from './routes/enrollmentRoutes.js';
 import moduleRoutes from './routes/moduleRoutes.js';
 import assignmentRoutes from './routes/assignmentRoutes.js';
+import quizRoutes from './routes/quizRoutes.js';
 import submissionRoutes from './routes/submissionRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
@@ -26,6 +27,7 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/assignments', assignmentRoutes);
+app.use('/api/quizzes', quizRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/users', userRoutes);
 
