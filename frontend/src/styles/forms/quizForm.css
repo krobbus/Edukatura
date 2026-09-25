@@ -1,0 +1,353 @@
+.quizFormPage{
+    max-width: 1100px;
+    margin: 2rem auto;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .quizBreadcrumb {
+        margin-bottom: 1rem;
+        font-size: 0.8rem;
+
+        a {
+            color: var(--main);
+            font-weight: 700;
+            text-decoration: none;
+            transition: ease-in-out 0.2s;
+
+            &:hover, &.active {
+                padding: 0.5rem 1rem;
+                color: #fff;
+                background-color: var(--main);
+            }
+        }
+    }
+
+    .quizCard {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: linear-gradient(180deg, #fff, #f8faf9);
+        border-left: 6px solid var(--spine, var(--main));
+        border-radius: 14px;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+        transition: ease-in-out 0.2s;
+        overflow: hidden;
+
+        .quizCardContent {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 2rem;
+
+            .quizLabel{
+                color: var(--warning);
+                font-size: 0.8rem;
+            }
+
+            .quizHeading{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2rem;
+
+                h2 {
+                    color: var(--secondary);
+                    font-size: 2rem;
+                    font-family: var(--headings);
+                }
+
+                .quizSubheading{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    gap: 0.5rem;
+
+                    span {
+                        text-align: right;
+                        color: var(--muted);
+                        line-height: 0.8;
+                    }
+                }
+            }
+
+            .quizDescription {
+                color: var(--shadow);
+                line-height: 1.2;
+                white-space: pre-wrap;
+            }
+        }
+    }
+
+    .quizForm{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 2.5rem 2rem;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+
+        h2 {
+            color: var(--main);
+            font-size: 2rem;
+            font-family: var(--headings);
+        }
+
+        .formGrid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+
+            .formField {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+
+                label{
+                    color: var(--main);
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                }
+
+                input, select, textarea{
+                    width: 100%;
+                    padding: 0.6rem 1rem;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 8px;
+                    background: #fff;
+                    color: var(--shadow);
+                    font-size: 0.8rem;
+                    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+                    &:focus{
+                        border-color: var(--main);
+                        box-shadow: 0 0 0 3px rgba(42, 107, 92, 0.14);
+                        outline: none;
+                    }
+                }
+
+                .fieldHint{
+                    margin-left: 1rem;
+                    font-size: 0.8rem;
+                    color: var(--muted);
+                }
+            }
+            .span{ grid-column: span 2; }
+        }
+
+        .quizQuestions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+
+            .quizQuestion {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem;
+                border: 1px solid #cbd5e1;
+                border-radius: 12px;
+                background: #f8fafc;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+                legend {
+                    padding: 0 0.5rem;
+                    color: var(--main);
+                    font-size: 0.95rem;
+                    font-family: var(--headings);
+                    font-weight: 700;
+                }
+
+                .formField {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.25rem;
+
+                    label {
+                        color: var(--main);
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                    }
+
+                    input, select, textarea {
+                        width: 100%;
+                        padding: 0.6rem 1rem;
+                        border: 1px solid #cbd5e1;
+                        border-radius: 8px;
+                        background: #fff;
+                        color: var(--shadow);
+                        font-size: 0.8rem;
+                        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+                        &:focus {
+                            border-color: var(--main);
+                            box-shadow: 0 0 0 3px rgba(42, 107, 92, 0.14);
+                            outline: none;
+                        }
+                    }
+                }
+
+                .quizPromptField {
+                    width: 100%;
+                }
+
+                .quizChoices {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.75rem;
+
+                    .quizSectionHeading {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: var(--main);
+                        font-size: 0.85rem;
+                        font-weight: 700;
+                    }
+
+                    .quizChoiceRow {
+                        display: flex;
+                        align-items: flex-end;
+                        gap: 0.6rem;
+
+                        .formField {
+                            flex: 1;
+                        }
+                    }
+                }
+
+                .inlineButton {
+                    padding: 0.4rem 0.75rem;
+                    border: 1px solid var(--main);
+                    border-radius: 6px;
+                    background: var(--main);
+                    color: #fff;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    &:hover:not(:disabled), &.active:not(:disabled) { background: var(--secondary); }
+
+                    &:disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                        border-color: #cbd5e1;
+                        color: var(--muted);
+                    }
+
+                    &.quizRemoveChoice {
+                        background: #fff;
+                        border-color: var(--danger);
+                        color: var(--danger);
+
+                        &:hover:not(:disabled), &.active:not(:disabled) {
+                            background: var(--danger);
+                            color: #fff;
+                        }
+
+                        &:disabled {
+                            opacity: 0.5;
+                            cursor: not-allowed;
+                        }
+                    }
+                }
+
+                .removeButton {
+                    align-self: flex-start;
+                    padding: 0.5rem 0.85rem;
+                    border: 1px solid var(--danger);
+                    border-radius: 8px;
+                    background: transparent;
+                    color: var(--danger);
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    &:hover:not(:disabled) {
+                        background: var(--danger);
+                        color: #fff;
+                    }
+
+                    &:disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+
+            .addButton {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                padding: 0.75rem 1rem;
+                border: 2px dashed var(--main);
+                border-radius: 10px;
+                background: rgba(42, 107, 92, 0.03);
+                color: var(--main);
+                font-size: 0.85rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: rgba(42, 107, 92, 0.08);
+                    border-color: var(--secondary);
+                    color: var(--secondary);
+                }
+            }
+        }
+
+        .formActions {
+            display: flex;
+            gap: 0.5rem;
+
+            button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 2rem;
+                padding: 0.8rem 1rem;
+                border-radius: 8px;
+                font-size: 0.8rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: 0.2s ease;
+
+                &:disabled {
+                    opacity: 0.62;
+                    cursor: not-allowed;
+                }
+            }
+
+            .submitButton{
+                border: 1px solid var(--main);
+                background: var(--main);
+                color: #fff;
+
+                &:hover:not(:disabled), &:active:not(:disabled) {
+                    border-color: var(--secondary);
+                    background: var(--secondary);
+                }
+            }
+
+            .cancelButton{
+                border: 1px solid #cbd5e1;
+                background: #fff;
+                color: var(--shadow);
+
+                &:hover, &.active {
+                    border-color: #cbd5e1;
+                    background: #cbd5e1;
+                }
+            }
+        }
+    }
+}
