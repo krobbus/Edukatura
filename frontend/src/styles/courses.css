@@ -1,0 +1,206 @@
+.courseCatalogPage, .courseDetailPage {
+    max-width: 1100px;
+    margin: 2rem auto;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+
+        h1 {
+            font-family: var(--headings);
+            color: var(--secondary);
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+        }
+
+        p { color: var(--muted); }
+
+        .createButton{
+            display: inline-flex;
+            align-items: center;
+            min-height: 2.5rem;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--main);
+            border-radius: 8px;
+            background: var(--main);
+            text-decoration: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+
+            &:hover, &.active {
+                border-color: var(--secondary);
+                background: var(--secondary);
+            }
+        }
+    }
+
+    .courseGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.2rem;
+
+        .courseCard {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(180deg, #fff, #f8faf9);
+            border-left: 6px solid var(--spine, var(--main));
+            border-radius: 14px;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+            transition: ease-in-out 0.2s;
+            overflow: hidden;
+
+            .courseButtons{
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                .manageButton {
+                    display: inline-flex;
+                    align-items: center;
+                    min-height: 2.5rem;
+                    padding: 0.5rem 0.75rem;
+                    border: 2px solid var(--main);
+                    border-radius: 8px;
+                    background: var(--main);
+                    color: #fff;
+                    text-decoration: none;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    text-align: center;
+
+                    &:hover, &.active {
+                        border-color: var(--secondary);
+                        background: var(--secondary);
+                    }
+                }
+
+                .courseEditButton, .courseDeleteButton{
+                    display: inline-flex;
+                    align-items: center;
+                    min-height: 2.5rem;
+                    padding: 0.5rem 0.75rem;
+                    border-radius: 8px;
+                    background-color: #fff;
+                    cursor: pointer;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    text-align: center;
+
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+
+                .courseEditButton {
+                    text-decoration: none;
+                    color: var(--secondary);
+                    border: 1px solid var(--secondary);
+
+                    &:hover, &.active {
+                        color: #fff;
+                        background-color: var(--secondary);
+                    }
+                }
+
+                .courseDeleteButton {
+                    color: var(--danger);
+                    border: 1px solid var(--danger);
+
+                    &:hover, &.active {
+                        color: #fff;
+                        background-color: var(--danger);
+                    }
+                }
+            }
+
+            .enrolledPill {
+                position: absolute;
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 999px;
+                background: rgba(42, 107, 92, 0.1);
+                color: var(--main);
+                font-size: 0.7rem;
+                font-weight: 700;
+            }
+
+            .courseForm {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                border: 1px solid var(--highlight);
+                border-radius: 12px;
+                background: rgba(255,255,255,0.8);
+                
+                .titleField, .descriptionField {
+                    grid-column: span 2;
+                }
+            }
+
+            .courseCardContent {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 2rem;
+
+                .courseCode {
+                    color: var(--main);
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    margin-bottom: 1rem;
+                }
+
+                h2 {
+                    color: var(--secondary);
+                    font-size: 2rem;
+                    font-family: var(--headings);
+                }
+
+                p {
+                    color: var(--muted);
+                    line-height: 1.2;
+                    white-space: pre-wrap;
+                }
+            }
+
+            .enrollButton {
+                display: inline-flex;
+                align-items: center;
+                min-height: 2.5rem;
+                padding: 0.5rem 0.75rem;
+                border: 2px solid var(--main);
+                border-radius: 8px;
+                background: var(--main);
+                color: #fff;
+                text-decoration: none;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-align: center;
+
+                &:hover, &.active {
+                    border-color: var(--secondary);
+                    background: var(--secondary);
+                }
+            }
+        }
+    }
+}
