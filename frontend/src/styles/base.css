@@ -1,0 +1,40 @@
+:root {
+    --main: #2A6B5C;
+    --secondary: #123F36;
+    --headings: 'Playfair Display', serif;
+    --body: 'Montserrat', sans-serif;
+    --highlight: #ddd;
+    --shadow: #161616;
+    --warning: #b8791c;
+    --danger: #cc3939;
+    --muted: #64748b;
+    --panel: #fff;
+    --page-bg: #b7e1cc;
+    --line: #e5e7eb;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--body);
+}
+
+body {
+    font-family: var(--body);
+    color: var(--shadow);
+    background-color: var(--page-bg);
+    background-image:
+        linear-gradient(rgba(42, 107, 92, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42, 107, 92, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+body:has(.authCard) {
+    background: linear-gradient(to right, var(--shadow), var(--main), var(--shadow));
+}
+
+.requiredMarker {
+    color: var(--danger);
+    font-weight: 700;
+}
