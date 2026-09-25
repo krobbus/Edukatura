@@ -24,7 +24,9 @@ export const getAssignments = asyncHandler(async (req, res) => {
 });
 
 export const getAssignmentById = asyncHandler(async (req, res) => {
-    const assignment = await Assignment.findById(req.params.id).populate('module', 'title');
+    const assignment = await Assignment.findById(req.params.id)
+        .populate('module', 'title')
+        .populate('course', 'courseCode title');
     if (!assignment) {
         res.status(404);
         throw new Error('Assignment not found');
