@@ -1,0 +1,143 @@
+.dashboardPage {
+    max-width: 1100px;
+    margin: 2rem auto;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        margin-bottom: 1.5rem;
+
+        h1 {
+            font-family: var(--headings);
+            color: var(--secondary);
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+        }
+
+        p { color: var(--muted); }
+    }
+
+    main {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+
+        .dashboardSection {
+            h2 {
+                padding-bottom: 0.5rem;
+                margin-bottom: 1rem;
+                border-bottom: 2px solid var(--main);
+                color: var(--secondary);
+                font-family: var(--headings);
+                font-size: 1.4rem;
+            }
+
+            .dashboardCourseGrid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+
+                .dashboardCourseCard {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    padding: 2rem;
+                    border-radius: 8px;
+                    background: linear-gradient(180deg, #fff, #f6faf7);
+                    border-left: 6px solid var(--spine, var(--main));
+                    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+                    text-decoration: none;
+                    transition: 0.2s ease;
+
+                    &:hover, &.active { transform: translateY(-5px); }
+
+                    .courseCode {
+                        color: var(--main);
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                        letter-spacing: 0.08em;
+                        text-transform: uppercase;
+                    }
+
+                    .courseTitle {
+                        color: var(--secondary);
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                    }
+
+                    .courseDescription {
+                        color: var(--shadow);
+                        line-height: 1.5;
+                        white-space: pre-wrap;
+                    }
+                }
+            }
+
+            .dashboardAnnouncement {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                list-style: none;
+                border-radius: 14px;
+
+                .dashboardAnnouncementCard{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    background: linear-gradient(180deg, #fff, #f6faf7);
+                    border-left: 6px solid var(--spine, var(--main));
+                    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+                    text-decoration: none;
+                    transition: 0.2s ease;
+
+                    &:hover, &.active { transform: translateY(-5px); }
+
+                    .announcementCode {
+                        display: block;
+                        color: var(--main);
+                        font-size: 0.8rem;
+                    }
+
+                    .announcementTitle {
+                        display: block;
+                        color: var(--secondary);
+                        font-weight: 600;
+                    }
+
+                    .announcementTag{
+                        width: fit-content;
+                        padding: 0.15rem 0.8rem;
+                        font-size: 0.6rem;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                        color: #fff;
+                        border-radius: 12px;
+                    }
+                    .assignment{ background-color: rgb(0, 133, 228); }
+                    .quiz{ background-color: #f59f01; }
+
+                    .announcementLabel {
+                        display: block;
+                        color: var(--muted);
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 820px) {
+        & main {
+            grid-template-columns: 1fr;
+        }
+    }
+}
