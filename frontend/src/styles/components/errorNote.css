@@ -1,0 +1,30 @@
+.alertNote[role='alert'] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 3rem;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    background-color: rgba(204, 57, 57, 0.1);
+    border: 1px solid rgba(204, 57, 57, 0.2);
+    color: var(--danger);
+
+    p {
+        font-size: 0.8rem;
+        text-align: center;
+        color: var(--danger);
+    }
+
+    button {
+        padding: 0.35rem 0.8rem;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background: var(--danger);
+        color: #fff;
+        font-size: 0.8rem;
+    }
+}
