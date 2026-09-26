@@ -290,7 +290,7 @@ function ModuleBlock({
 
                         return (
                             <li key={assignment._id} className="courseworkListItem assignmentBlock">
-                                <Link className="courseworkLink" to={`/assignments/${assignment._id}`}>
+                                <Link className="courseworkLink" to={`/courses/${courseId}/assignments/${assignment._id}`}>
                                     <span className='assignmentTitle'><strong className="assignmentLabel">Assignment</strong> {assignment.title}</span>
                                     <span className={`dueDate ${meta.className}`}>{meta.label}</span>
                                 </Link>
@@ -325,7 +325,7 @@ function ModuleBlock({
                         const meta = dueMeta(quiz.dueDate);
                         return (
                             <li key={quiz._id} className="courseworkListItem quizBlock">
-                                <Link className="courseworkLink" to={`/quizzes/${quiz._id}`}>
+                                <Link className="courseworkLink" to={`/courses/${courseId}/quizzes/${quiz._id}`}>
                                     <span className='quizTitle'><strong className="quizLabel">Quiz</strong> {quiz.title}</span>
                                     <span className={`dueDate ${meta.className}`}>{meta.label}</span>
                                 </Link>
@@ -340,6 +340,7 @@ function ModuleBlock({
                                         >
                                             <span aria-hidden="true">Edit</span>
                                         </Link>
+                                        
                                         <button
                                             className="deleteButton"
                                             type="button"
