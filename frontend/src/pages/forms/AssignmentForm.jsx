@@ -10,6 +10,7 @@ export default function AssignmentForm() {
     const { courseId, assignmentId } = useParams();
     const isEditing = Boolean(assignmentId);
 
+    const [course, setCourse] = useState(null);
     const [modules, setModules] = useState([]);
     const [form, setForm] = useState({
         title: '',
@@ -24,6 +25,10 @@ export default function AssignmentForm() {
     const [loadingData, setLoadingData] = useState(true);
 
     useEffect(() => {
+        api.get(`/courses/${courseId}`)
+            .then((data) => setCourse(data.course ?? data))
+            .catch(() => null);
+
         api.get(`/modules?course=${courseId}`)
             .then((data) => setModules(data.modules ?? data ?? []))
             .catch((err) => setError(err));
@@ -63,10 +68,22 @@ export default function AssignmentForm() {
         setBusy(true);
         setError(null);
         try {
-            const data = await api.post('/assignments', { course: courseId, title: form.title, description: form.description, dueDate: new Date(form.dueDate).toISOString(), maxPoints: Number(form.maxPoints), module: form.module || null });
-            onCreated(data.assignment ?? data);
-            setForm({ title: '', description: '', dueDate: '', maxPoints: 100, module: '' });
-            onToggle();
+            const data = await api.post('/assignments', {
+                course: courseId,
+                title: form.title,
+                description: form.description,
+                dueDate: new Date(form.dueDate).toISOString(),
+                maxPoints: Number(form.maxPoints),
+                module: form.module || null 
+            });
+
+            if (isEditing) {
+                await api.put(`/assignments/${assignmentId}`, payload);
+            } else {
+                await api.post('/assignments', payload);
+            }
+
+            navigate(`/courses/${courseId}`);
         } catch (submitError) {
             setError(submitError);
         } finally {
@@ -81,7 +98,9 @@ export default function AssignmentForm() {
     return (
         <section className="assignmentFormPage">
             <p className="assignmentBreadcrumb">
-                <Link to={`/courses/${courseId}`}>⟵ View modules</Link>
+                <Link to={`/courses/${courseId}`}>
+                    ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
+                </Link>
             </p>
 
             {isEditing &&

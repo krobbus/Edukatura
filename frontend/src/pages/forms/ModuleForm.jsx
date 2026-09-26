@@ -10,12 +10,19 @@ export default function ModuleForm() {
     const { courseId, moduleId } = useParams();
     const isEditing = Boolean(moduleId);
 
+    const [course, setCourse] = useState(null);
     const [form, setForm] = useState({ title: '', description: '' });
     const [assignments, setAssignments] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
     const [error, setError] = useState(null);
     const [busy, setBusy] = useState(false);
     const [loadingData, setLoadingData] = useState(isEditing);
+
+    useEffect(() => {
+        api.get(`/courses/${courseId}`)
+            .then((data) => setCourse(data.course ?? data))
+            .catch(() => null);
+    }, [courseId]);
 
     useEffect(() => {
         if (!isEditing) return;
@@ -78,7 +85,9 @@ export default function ModuleForm() {
     return (
         <section className="moduleFormPage">
             <p className="moduleBreadcrumb">
-                <Link to={`/courses/${courseId}`}>⟵ View modules</Link>
+                <Link to={`/courses/${courseId}`}>
+                    ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
+                </Link>
             </p>
             
             {isEditing &&

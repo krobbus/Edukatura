@@ -12,6 +12,7 @@ export default function QuizForm() {
 
     const createQuestion = () => ({ prompt: '', choices: ['', ''], correctAnswer: 0 });
 
+    const [course, setCourse] = useState(null);
     const [modules, setModules] = useState([]);
     const [form, setForm] = useState({
         title: '',
@@ -27,6 +28,10 @@ export default function QuizForm() {
     const [loadingData, setLoadingData] = useState(true);
 
     useEffect(() => {
+        api.get(`/courses/${courseId}`)
+            .then((data) => setCourse(data.course ?? data))
+            .catch(() => null);
+
         api.get(`/modules?course=${courseId}`)
             .then((data) => setModules(data.modules ?? data ?? []))
             .catch((err) => setError(err));
@@ -154,7 +159,9 @@ export default function QuizForm() {
     return (
         <section className="quizFormPage">
             <p className="quizBreadcrumb">
-                <Link to={`/courses/${courseId}`}>⟵ View modules</Link>
+                <Link to={`/courses/${courseId}`}>
+                    ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
+                </Link>
             </p>
 
             {isEditing &&
