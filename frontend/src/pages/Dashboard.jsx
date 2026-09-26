@@ -12,20 +12,30 @@ export default function Dashboard() {
     const [courses, setCourses] = useState([]);
     const [assignments, setAssignments] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
+    const [submissions, setSubmissions] = useState([]);
     const [state, setState] = useState({ loading: true, error: null });
 
     function load() {
         setState({ loading: true, error: null });
         const controller = new AbortController();
-        Promise.all([
+        const requests = [
             api.get('/courses', { signal: controller.signal }),
             api.get('/assignments?upcoming=true', { signal: controller.signal }),
             api.get('/quizzes?upcoming=true', { signal: controller.signal }),
-        ])
-            .then(([c, a, q]) => {
+        ];
+
+        if (!canTeach) {
+            requests.push(api.get('/submissions/my', { signal: controller.signal }).catch(() => []));
+        }
+
+        Promise.all(requests)
+            .then(([c, a, q, s]) => {
                 setCourses(c.courses ?? c ?? []);
                 setAssignments(a.assignments ?? a ?? []);
                 setQuizzes(q.quizzes ?? q ?? []);
+                if (s) {
+                    setSubmissions(s.submissions ?? (Array.isArray(s) ? s : []));
+                }
                 setState({ loading: false, error: null });
             })
             .catch((err) => {
@@ -41,11 +51,27 @@ export default function Dashboard() {
 
     if (state.loading) return <Loading label="Loading your dashboard" />;
 
-    const soon = [
+    const submittedIds = new Set(
+        submissions.map((s) => {
+            const aId = typeof s.assignment === 'object' ? s.assignment?._id : s.assignment;
+            const qId = typeof s.quiz === 'object' ? s.quiz?._id : s.quiz;
+            return aId || qId;
+        }).filter(Boolean)
+    );
+
+    const allItems = [
         ...assignments.map((item) => ({ ...item, kind: 'assignment' })),
         ...quizzes.map((item) => ({ ...item, kind: 'quiz' })),
-    ]
+    ];
+
+    const soon = allItems
+        .filter((item) => !submittedIds.has(item._id))
         .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+        .slice(0, 6);
+
+    const completed = allItems
+        .filter((item) => submittedIds.has(item._id))
+        .sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate))
         .slice(0, 6);
 
     return (
@@ -109,7 +135,11 @@ export default function Dashboard() {
                         <ul className="dashboardAnnouncement">
                             {soon.map((item) => {
                                 const meta = dueMeta(item.dueDate);
-                                const path = item.kind === 'quiz' ? `/quizzes/${item._id}` : `/assignments/${item._id}`;
+                                const courseId = typeof item.course === 'object' ? item.course?._id : item.course;
+                                const itemType = item.kind === 'quiz' ? 'quizzes' : 'assignments';
+                                const path = courseId
+                                    ? `/courses/${courseId}/${itemType}/${item._id}`
+                                    : `/${itemType}/${item._id}`;
 
                                 return (
                                     <Link
@@ -131,6 +161,46 @@ export default function Dashboard() {
                         </ul>
                     )}
                 </section>
+
+                {!canTeach && (
+                    <section className="dashboardSection">
+                        <h2>Completed</h2>
+
+                        {completed.length === 0 ? (
+                            <EmptyState
+                                title="No completed work yet"
+                                body="Submitted assignments and quizzes will appear here."
+                            />
+                        ) : (
+                            <ul className="dashboardAnnouncement">
+                                {completed.map((item) => {
+                                    const courseId = typeof item.course === 'object' ? item.course?._id : item.course;
+                                    const itemType = item.kind === 'quiz' ? 'quizzes' : 'assignments';
+                                    const path = courseId
+                                        ? `/courses/${courseId}/${itemType}/${item._id}`
+                                        : `/${itemType}/${item._id}`;
+
+                                    return (
+                                        <Link
+                                            key={`completed-${item.kind}-${item._id}`}
+                                            className="dashboardAnnouncementCard"
+                                            to={path}
+                                        >
+                                            <span className="announcementCode">{item.course?.courseCode ?? item.course?.title ?? ''}</span>
+                                            <span className="announcementTitle">{item.title}</span>
+                                            {item.kind === 'quiz' ? (
+                                                <span className="announcementTag quiz">Quiz</span>
+                                            ) : (
+                                                <span className="announcementTag assignment">Assignment</span>
+                                            )}
+                                            <span className="announcementLabel">Submitted</span>
+                                        </Link>
+                                    );
+                                })}
+                            </ul>
+                        )}
+                    </section>
+                )}
             </main>
         </section>
     );
