@@ -15,7 +15,7 @@ export const createEnrollment = asyncHandler(async (req, res) => {
 });
 
 export const getMyEnrollments = asyncHandler(async (req, res) => {
-    const enrollments = await Enrollment.find({ student: req.user._id }).populate('course', 'courseCode title');
+    const enrollments = await Enrollment.find({ student: req.user._id }).populate('course', 'courseCode title description');
     res.json(enrollments);
 });
 

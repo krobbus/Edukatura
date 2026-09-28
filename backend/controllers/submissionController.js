@@ -2,21 +2,28 @@ import asyncHandler from '../utils/asyncHandler.js';
 import { Submission } from '../models/index.js';
 
 export const createSubmission = asyncHandler(async (req, res) => {
-    const { assignment, submissionText, fileUrl } = req.body;
+    const { assignment, quiz, submissionText, fileUrl, answers } = req.body;
 
-    const existing = await Submission.findOne({ assignment, student: req.user._id });
+    if (!assignment && !quiz) {
+        res.status(400);
+        throw new Error('assignment or quiz is required');
+    }
+
+    const existing = await Submission.findOne(
+        quiz
+            ? { quiz, student: req.user._id }
+            : { assignment, student: req.user._id }
+    );
     if (existing) {
         res.status(400);
-        throw new Error('You already submitted this assignment');
+        throw new Error(`You already submitted this ${quiz ? 'quiz' : 'assignment'}`);
     }
 
     const submission = await Submission.create({
-        assignment,
+        ...(quiz ? { quiz, answers } : { assignment, submissionText, fileUrl }),
         student: req.user._id,
-        submissionText,
-        fileUrl,
         status: 'submitted',
-        submittedAt: new Date()
+        submittedAt: new Date(),
     });
 
     res.status(201).json(submission);
@@ -24,19 +31,25 @@ export const createSubmission = asyncHandler(async (req, res) => {
 
 export const getMySubmissions = asyncHandler(async (req, res) => {
     const filter = { student: req.user._id };
-    if (req.query.assignment) filter.assignment = req.query.assignment;
-    const submissions = await Submission.find(filter).populate('assignment', 'title dueDate maxPoints');
+    if (req.query.quiz) filter.quiz = req.query.quiz;
+    else if (req.query.assignment) filter.assignment = req.query.assignment;
+
+    const submissions = await Submission.find(filter)
+        .populate('assignment', 'title dueDate maxPoints')
+        .populate('quiz', 'title dueDate maxPoints');
 
     res.json(submissions);
 });
 
-export const getSubmissionsForAssignment = asyncHandler(async (req, res) => {
-    if (!req.query.assignment) {
+export const getSubmissionsForCoursework = asyncHandler(async (req, res) => {
+    const { quiz, assignment } = req.query;
+    if (!quiz && !assignment) {
         res.status(400);
-        throw new Error('assignment query param is required');
+        throw new Error('assignment or quiz query param is required');
     }
 
-    const submissions = await Submission.find({ assignment: req.query.assignment }).populate('student', 'firstName lastName email');
+    const filter = quiz ? { quiz } : { assignment };
+    const submissions = await Submission.find(filter).populate('student', 'firstName lastName email');
     res.json(submissions);
 });
 

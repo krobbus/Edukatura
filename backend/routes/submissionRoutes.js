@@ -4,7 +4,7 @@ import authorizeRoles from '../middleware/roleMiddleware.js';
 import {
     createSubmission,
     getMySubmissions,
-    getSubmissionsForAssignment,
+    getSubmissionsForCoursework,
     gradeSubmission
 } from '../controllers/submissionController.js';
 
@@ -15,7 +15,7 @@ router.use(verifyToken);
 router.get('/my', getMySubmissions);
 
 router.route('/')
-    .get(authorizeRoles('faculty', 'admin'), getSubmissionsForAssignment)
+    .get(authorizeRoles('faculty', 'admin'), getSubmissionsForCoursework)
     .post(createSubmission);
 
 router.put('/:id/grade', authorizeRoles('faculty', 'admin'), gradeSubmission);
