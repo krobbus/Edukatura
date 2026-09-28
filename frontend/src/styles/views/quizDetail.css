@@ -1,0 +1,366 @@
+.quizPage {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 1100px;
+    margin: 2rem auto;
+    color: var(--muted);
+
+    .quizBreadcrumb {
+        margin-bottom: 1rem;
+        font-size: 0.8rem;
+
+        a {
+            color: var(--main);
+            font-weight: 700;
+            text-decoration: none;
+            transition: ease-in-out 0.2s;
+
+            &:hover, &.active {
+                padding: 0.5rem 1rem;
+                color: #fff;
+                background-color: var(--main);
+            }
+        }
+    }
+
+    header {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 2rem;
+        background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,250,247,0.92));
+        border: 1px solid var(--highlight);
+        border-left: 6px solid var(--spine, var(--main));
+        border-radius: 16px;
+
+        .courseworkActions{
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .editButton, .deleteButton{
+                display: inline-flex;
+                align-items: center;
+                min-height: 2.5rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 8px;
+                background-color: #fff;
+                cursor: pointer;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-align: center;
+
+                &:hover {
+                    color: #fff;
+                }
+            }
+
+            .editButton {
+                text-decoration: none;
+                color: var(--secondary);
+                border: 1px solid var(--secondary);
+
+                &:hover, &.active {
+                    color: #fff;
+                    background-color: var(--secondary);
+                }
+            }
+
+            .deleteButton {
+                color: var(--danger);
+                border: 1px solid var(--danger);
+
+                &:hover, &.active {
+                    color: #fff;
+                    background-color: var(--danger);
+                }
+            }
+        }
+
+        .courseCode {
+            display: inline-flex;
+            color: var(--main);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: var(--headings);
+            color: var(--secondary);
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+        }
+
+        p { 
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(42, 107, 92, 0.08);
+            color: var(--main);
+            font-size: 0.8rem;
+            font-weight: 700;
+            width: fit-content;
+
+            &.overdue, &.late {
+                color: #fff;
+                background: var(--danger);
+            }
+
+            &.dueSoon, &.soon {
+                color: #fff;
+                background: var(--warning);
+            } 
+        }
+    }
+
+    .quizContentGrid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+
+        .quizPanel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1.5rem 1.75rem;
+            background: #fff;
+            border-radius: 12px;
+            border-left: 6px solid var(--main);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+            height: fit-content;
+
+            h2 {
+                color: var(--secondary);
+                font-family: var(--headings);
+                font-size: 1.25rem;
+            }
+        }
+
+        .quizInfoPanel {
+            grid-column: span 2;
+
+            .textBlock {
+                padding: 1rem;
+                border-radius: 10px;
+                background: rgba(15, 23, 42, 0.06);
+            }
+
+            .quizQuestionsHeader {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 1rem;
+
+                h2 { margin-bottom: 0; }
+                span { font-size: 0.8rem; }
+            }
+
+            .quizQuestionList {
+                display: grid;
+                gap: 1rem;
+                margin: 0;
+                padding-left: 1.5rem;
+
+                .quizQuestionCard {
+                    padding: 1rem;
+                    border-bottom: 1px solid var(--line);
+
+                    &:last-child { border-bottom: 0; }
+
+                    h3 {
+                        margin-bottom: 0.8rem;
+                        color: var(--secondary);
+                        font-size: 1rem;
+                    }
+
+                    .quizChoiceList {
+                        display: grid;
+                        gap: 0.5rem;
+                        margin: 0;
+                        list-style-type: upper-alpha;
+
+                        li {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            gap: 1rem;
+                            padding: 0.8rem 1rem;
+                            border: 1px solid var(--highlight);
+                            border-radius: 8px;
+                            background: #fff;
+                            transition: all 0.2s ease;
+
+                            &:has(.choiceLabel) { padding: 0; }
+
+                            .choiceLabel {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.75rem;
+                                width: 100%;
+                                padding: 0.7rem 0.8rem;
+                                cursor: pointer;
+
+                                input[type="radio"] {
+                                    width: 1.1rem;
+                                    height: 1.1rem;
+                                    accent-color: var(--main);
+                                    cursor: pointer;
+                                }
+
+                                span {
+                                    flex: 1;
+                                }
+                            }
+
+                            &.selectedChoice, &.active {
+                                border-color: var(--main);
+                                background: rgba(42, 107, 92, 0.05);
+                                font-weight: 600;
+                            }
+
+                            &.correctChoice {
+                                border-color: var(--main);
+                                background: rgba(42, 107, 92, 0.08);
+                            }
+
+                            strong {
+                                color: var(--main);
+                                font-size: 0.75rem;
+                                text-transform: uppercase;
+                                letter-spacing: 0.04em;
+                                white-space: nowrap;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .quizSubmissionPanel{
+            .panelDescription { color: var(--shadow); }
+            
+            .gradingButton {
+                padding: 0.8rem;
+                border-radius: 8px;
+                background-color: var(--main);
+                cursor: pointer;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-align: center;
+                text-decoration: none;
+                color: #fff;
+                border: 1px solid var(--main);
+
+                &:hover, &.active {
+                    background-color: var(--secondary);
+                    border: 1px solid var(--secondary);
+                }
+            }
+
+            .quizStatusRow {
+                display: flex;
+                align-items: center;
+                color: var(--muted);
+                font-size: 0.82rem;
+
+                .quizStatusDot {
+                    display: inline-block;
+                    width: 0.6rem;
+                    height: 0.6rem;
+                    margin-right: 0.45rem;
+                    border-radius: 50%;
+                    background: var(--muted);
+
+                    &.submittedStatus {
+                        background: var(--warning);
+                    }
+
+                    &.gradedStatus {
+                        background: var(--main);
+                    }
+
+                    &.pendingStatus {
+                        background: var(--muted);
+                    }
+                }
+            }
+
+            .quizGradeBlock{
+                padding-bottom: 1rem;
+                border-bottom: 1px solid var(--line);
+
+                .quizGradeScore{
+                    color: var(--secondary);
+                    text-align: center;
+                    font-family: var(--headings);
+                    font-size: 2rem;
+                    font-weight: 700;
+                    padding-bottom: 0.5rem;
+
+                    .scoreMax{ 
+                        color: var(--muted);
+                        font-family: var(--body);
+                        font-size: 1rem;
+                        font-weight: 500;
+                    }
+                }
+                
+                .textBlock{
+                    text-align: center;
+                    white-space: pre-wrap;
+                }
+            }
+        }
+
+        .quizSubmitForm {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .quizLateNotice {
+                color: var(--danger);
+                font-size: 0.8rem;
+                font-weight: 600;
+            }
+
+            .turnInButton{
+                min-height: 2.5rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 8px;
+                background-color: var(--main);
+                text-decoration: none;
+                color: #fff;
+                border: 1px solid var(--main);
+                cursor: pointer;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-align: center;
+                width: 100%;
+
+                &:hover, &.active {
+                    border-color: var(--secondary);
+                    background-color: var(--secondary);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .quizPage {
+        margin: 3rem 1rem;
+
+        .quizContentGrid {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
