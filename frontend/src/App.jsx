@@ -4,19 +4,22 @@ import './styles/base.css';
 import './styles/auth.css';
 import './styles/dashboard.css';
 import './styles/courses.css';
-import './styles/assignment.css';
-import './styles/quiz.css';
 import './styles/grading.css';
 import './styles/users.css';
 
+// components
 import './styles/components/loading.css';
 import './styles/components/layout.css';
 import './styles/components/notFound.css';
 import './styles/components/emptyState.css';
 import './styles/components/errorNote.css';
 
+// views
 import './styles/views/courseDetail.css';
+import './styles/views/assignmentDetail.css';
+import './styles/views/quizDetail.css';
 
+// forms
 import './styles/forms/courseForm.css';
 import './styles/forms/moduleForm.css';
 import './styles/forms/assignmentForm.css';
@@ -28,18 +31,20 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
-import CourseDetail from './pages/CourseDetail';
-import AssignmentDetail from './pages/AssignmentDetail';
-import QuizDetail from './pages/QuizDetail';
+import Grading from './pages/Grading';
+import Users from './pages/Users';
+import NotFound from './pages/NotFound';
 
+// views
+import CourseDetail from './pages/views/CourseDetail';
+import AssignmentDetail from './pages/views/AssignmentDetail';
+import QuizDetail from './pages/views/QuizDetail';
+
+// forms
 import CourseForm from './pages/forms/CourseForm';
 import ModuleForm from './pages/forms/ModuleForm';
 import AssignmentForm from './pages/forms/AssignmentForm';
 import QuizForm from './pages/forms/QuizForm';
-
-import Grading from './pages/Grading';
-import Users from './pages/Users';
-import NotFound from './pages/NotFound';
 
 export default function App() {
     return (
@@ -69,7 +74,8 @@ export default function App() {
                     <Route path="/courses/:courseId/quizzes/:quizId/edit" element={<QuizForm />} />
 
                     <Route element={<ProtectedRoute allow={['faculty', 'admin']} />}>
-                        <Route path="/assignments/:assignmentId/submissions" element={<Grading />} />
+                        <Route path="/courses/:courseId/assignments/:assignmentId/submissions" element={<Grading />} />
+                        <Route path="/courses/:courseId/quizzes/:quizId/submissions" element={<Grading />} />
                     </Route>
 
                     <Route element={<ProtectedRoute allow={['admin']} />}>
