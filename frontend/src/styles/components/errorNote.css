@@ -9,8 +9,8 @@
     margin-bottom: 1rem;
     padding: 0.8rem 1rem;
     border-radius: 10px;
-    background-color: rgba(204, 57, 57, 0.1);
-    border: 1px solid rgba(204, 57, 57, 0.2);
+    background-color: rgba(204, 57, 57, 0.2);
+    border: none;
     color: var(--danger);
 
     p {

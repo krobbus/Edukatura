@@ -351,3 +351,14 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .quizFormPage{ 
+        margin: 2rem 1rem;
+        
+        .quizForm .formGrid{
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

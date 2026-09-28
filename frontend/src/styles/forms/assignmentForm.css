@@ -185,3 +185,14 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .assignmentFormPage{ 
+        margin: 2rem 1rem;
+        
+        .assignmentForm .formGrid{
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

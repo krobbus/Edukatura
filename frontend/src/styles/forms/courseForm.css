@@ -169,3 +169,7 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .courseFormPage{ margin: 2rem 1rem; }
+}

@@ -173,3 +173,7 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .moduleFormPage{ margin: 2rem 1rem }
+}
