@@ -13,13 +13,14 @@ export default function Dashboard() {
     const [assignments, setAssignments] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
     const [submissions, setSubmissions] = useState([]);
+    const [needsGrading, setNeedsGrading] = useState({});
     const [state, setState] = useState({ loading: true, error: null });
 
     function load() {
         setState({ loading: true, error: null });
         const controller = new AbortController();
         const requests = [
-            api.get('/courses', { signal: controller.signal }),
+            api.get(canTeach ? '/courses' : '/enrollments/my', { signal: controller.signal }),
             api.get('/assignments?upcoming=true', { signal: controller.signal }),
             api.get('/quizzes?upcoming=true', { signal: controller.signal }),
         ];
@@ -30,9 +31,16 @@ export default function Dashboard() {
 
         Promise.all(requests)
             .then(([c, a, q, s]) => {
-                setCourses(c.courses ?? c ?? []);
-                setAssignments(a.assignments ?? a ?? []);
-                setQuizzes(q.quizzes ?? q ?? []);
+                const rawCourses = c.courses ?? c ?? [];
+                const courseList = canTeach ? rawCourses : rawCourses.map((e) => e.course).filter(Boolean);
+                const courseIds = new Set(courseList.map((x) => String(x._id)));
+                const inMyCourses = (item) =>
+                    canTeach || courseIds.has(String(typeof item.course === 'object' ? item.course?._id : item.course));
+
+                setCourses(courseList);
+                setAssignments((a.assignments ?? a ?? []).filter(inMyCourses));
+                setQuizzes((q.quizzes ?? q ?? []).filter(inMyCourses));
+
                 if (s) {
                     setSubmissions(s.submissions ?? (Array.isArray(s) ? s : []));
                 }
@@ -49,6 +57,34 @@ export default function Dashboard() {
         return () => controller.abort();
     }, []);
 
+    useEffect(() => {
+        if (!canTeach) return;
+
+        const items = [
+            ...assignments.map((i) => ({ id: i._id, kind: 'assignment' })),
+            ...quizzes.map((i) => ({ id: i._id, kind: 'quiz' })),
+        ];
+        if (items.length === 0) return;
+
+        let cancelled = false;
+
+        Promise.all(
+            items.map(async ({ id, kind }) => {
+                try {
+                    const res = await api.get(`/submissions?${kind}=${id}`);
+                    const list = res?.submissions ?? (Array.isArray(res) ? res : []);
+                    return [`${kind}-${id}`, list.filter((s) => s.status === 'submitted').length];
+                } catch {
+                    return [`${kind}-${id}`, 0];
+                }
+            })
+        ).then((entries) => {
+            if (!cancelled) setNeedsGrading(Object.fromEntries(entries));
+        });
+
+        return () => { cancelled = true; };
+    }, [assignments, quizzes, canTeach]);
+
     if (state.loading) return <Loading label="Loading your dashboard" />;
 
     const submittedIds = new Set(
@@ -57,6 +93,17 @@ export default function Dashboard() {
             const qId = typeof s.quiz === 'object' ? s.quiz?._id : s.quiz;
             return aId || qId;
         }).filter(Boolean)
+    );
+
+    const gradedIds = new Set(
+        submissions
+            .filter((s) => s.status === 'graded')
+            .map((s) => {
+                const aId = typeof s.assignment === 'object' ? s.assignment?._id : s.assignment;
+                const qId = typeof s.quiz === 'object' ? s.quiz?._id : s.quiz;
+                return aId || qId;
+            })
+            .filter(Boolean)
     );
 
     const allItems = [
@@ -80,8 +127,8 @@ export default function Dashboard() {
                 <h1>Good to see you, {user?.firstName}.</h1>
                 <p>
                     {canTeach
-                        ? `You are teaching ${courses.length} ${courses.length === 1 ? 'course' : 'courses'}.`
-                        : `You are enrolled in ${courses.length} ${courses.length === 1 ? 'course' : 'courses'}.`}
+                        ? `Glad you're here! You are teaching ${courses.length} ${courses.length === 1 ? 'course' : 'courses'}.`
+                        : `Glad you're here! You are enrolled in ${courses.length} ${courses.length === 1 ? 'course' : 'courses'}.`}
                 </p>
             </header>
 
@@ -124,7 +171,7 @@ export default function Dashboard() {
                 </section>
 
                 <section className="dashboardSection">
-                    <h2>Coming up</h2>
+                    <h2>{canTeach ? 'Your courseworks' : 'Coming up'}</h2>
 
                     {soon.length === 0 ? (
                         <EmptyState
@@ -147,6 +194,12 @@ export default function Dashboard() {
                                         className="dashboardAnnouncementCard"
                                         to={path}
                                     >
+                                        {canTeach && needsGrading[`${item.kind}-${item._id}`] > 0 && (
+                                            <span className="announcementTag needsGrading">
+                                                {needsGrading[`${item.kind}-${item._id}`]} student needs to be graded
+                                            </span>
+                                        )}
+
                                         <span className="announcementCode">{item.course?.courseCode ?? item.course?.title ?? ''}</span>
                                         <span className="announcementTitle">{item.title}</span>
                                         {item.kind === 'quiz' ? (
@@ -155,6 +208,7 @@ export default function Dashboard() {
                                             <span className="announcementTag assignment">Assignment</span>
                                         )}
                                         <span className="announcementLabel">{meta.label}</span>
+
                                     </Link>
                                 );
                             })}
@@ -176,9 +230,7 @@ export default function Dashboard() {
                                 {completed.map((item) => {
                                     const courseId = typeof item.course === 'object' ? item.course?._id : item.course;
                                     const itemType = item.kind === 'quiz' ? 'quizzes' : 'assignments';
-                                    const path = courseId
-                                        ? `/courses/${courseId}/${itemType}/${item._id}`
-                                        : `/${itemType}/${item._id}`;
+                                    const path = courseId && `/courses/${courseId}/${itemType}/${item._id}`;
 
                                     return (
                                         <Link
@@ -186,6 +238,12 @@ export default function Dashboard() {
                                             className="dashboardAnnouncementCard"
                                             to={path}
                                         >
+                                            {!canTeach && gradedIds.has(item._id) ? (
+                                                <span className="announcementTag graded">Graded</span>
+                                            ) : (
+                                                <span className="announcementTag pending">Pending grade</span>
+                                            )}
+
                                             <span className="announcementCode">{item.course?.courseCode ?? item.course?.title ?? ''}</span>
                                             <span className="announcementTitle">{item.title}</span>
                                             {item.kind === 'quiz' ? (

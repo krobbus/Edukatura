@@ -37,7 +37,7 @@ export default function Login() {
         <section className="authCard">
             <header>
                 <h1>Edukatura</h1>
-                <p>Courses, modules, quizzes, and assignments in one place.</p>
+                <p>Your complete learning hub for courses, modules, and coursework.</p>
             </header>
 
             <form className="authForm" onSubmit={submit} noValidate>

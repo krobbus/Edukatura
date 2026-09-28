@@ -62,7 +62,7 @@ export default function Register() {
         <section className="authCard">
             <header>
                 <h1>Create your account</h1>
-                <p>Students can enroll right away. Faculty accounts need approval.</p>
+                <p>Join today to explore courses, track your progress, and jump straight into learning.</p>
             </header>
 
             <form className="authForm" onSubmit={submit} noValidate>

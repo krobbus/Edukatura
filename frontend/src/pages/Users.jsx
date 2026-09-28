@@ -81,7 +81,7 @@ export default function Users() {
         <div className="usersPage">
             <header>
                 <h1>Users</h1>
-                <p>Everyone with an account, and what they can do.</p>
+                <p>Manage accounts, roles, and access in one place.</p>
             </header>
 
             <div className="userSearch">

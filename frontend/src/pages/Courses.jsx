@@ -39,8 +39,8 @@ export default function Courses() {
                     <h1>{canTeach ? 'Your courses' : 'Course catalogue'}</h1>
                     <p>
                         {canTeach
-                            ? 'Everything you teach, newest first.'
-                            : 'Enroll in a course to see its modules and assignments.'}
+                            ? 'Here are all the courses you teach, sorted by newest first!'
+                            : 'Ready to dive in? Enroll in a course to explore modules and start managing your coursework.'}
                     </p>
                 </div>
 
