@@ -133,7 +133,7 @@ export default function QuizForm() {
         setBusy(true);
         setError(null);
         try {
-            const data = await api.post('/quizzes', {
+            const payload = {
                 course: courseId,
                 title: form.title,
                 description: form.description,
@@ -141,10 +141,15 @@ export default function QuizForm() {
                 maxPoints: Number(form.maxPoints),
                 module: form.module || null,
                 questions: form.questions,
-            });
-            onCreated(data.quiz ?? data);
-            setForm({ title: '', description: '', dueDate: '', maxPoints: 100, module: '', questions: [createQuestion()] });
-            onToggle();
+            };
+
+            if (isEditing) {
+                await api.put(`/quizzes/${quizId}`, payload);
+            } else {
+                await api.post('/quizzes', payload);
+            }
+            
+            navigate(`/courses/${courseId}`);
         } catch (submitError) {
             setError(submitError);
         } finally {

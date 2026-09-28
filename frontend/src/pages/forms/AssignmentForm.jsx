@@ -68,14 +68,14 @@ export default function AssignmentForm() {
         setBusy(true);
         setError(null);
         try {
-            const data = await api.post('/assignments', {
+            const payload = {
                 course: courseId,
                 title: form.title,
                 description: form.description,
                 dueDate: new Date(form.dueDate).toISOString(),
                 maxPoints: Number(form.maxPoints),
                 module: form.module || null 
-            });
+            };
 
             if (isEditing) {
                 await api.put(`/assignments/${assignmentId}`, payload);
