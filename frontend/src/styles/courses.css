@@ -22,9 +22,6 @@
         p { color: var(--muted); }
 
         .createButton{
-            display: inline-flex;
-            align-items: center;
-            min-height: 2.5rem;
             padding: 0.5rem 0.75rem;
             border: 2px solid var(--main);
             border-radius: 8px;
@@ -32,6 +29,7 @@
             text-decoration: none;
             color: #fff;
             cursor: pointer;
+            white-space: nowrap;
             font-size: 0.75rem;
             font-weight: 700;
             text-align: center;
@@ -69,10 +67,7 @@
                 gap: 0.5rem;
 
                 .manageButton {
-                    display: inline-flex;
-                    align-items: center;
-                    min-height: 2.5rem;
-                    padding: 0.5rem 0.75rem;
+                    padding: 0.8rem 1rem;
                     border: 2px solid var(--main);
                     border-radius: 8px;
                     background: var(--main);
@@ -89,10 +84,7 @@
                 }
 
                 .courseEditButton, .courseDeleteButton{
-                    display: inline-flex;
-                    align-items: center;
-                    min-height: 2.5rem;
-                    padding: 0.5rem 0.75rem;
+                    padding: 0.8rem 1rem;
                     border-radius: 8px;
                     background-color: #fff;
                     cursor: pointer;
@@ -166,7 +158,6 @@
                     font-weight: 700;
                     letter-spacing: 0.08em;
                     text-transform: uppercase;
-                    margin-bottom: 1rem;
                 }
 
                 h2 {
@@ -183,22 +174,45 @@
             }
 
             .enrollButton {
-                display: inline-flex;
-                align-items: center;
-                min-height: 2.5rem;
-                padding: 0.5rem 0.75rem;
+                padding: 0.8rem 4rem;
+                margin: 1rem auto;
                 border: 2px solid var(--main);
                 border-radius: 8px;
                 background: var(--main);
                 color: #fff;
+                cursor: pointer;
                 text-decoration: none;
                 font-size: 0.75rem;
                 font-weight: 700;
                 text-align: center;
+                width: fit-content;
 
                 &:hover, &.active {
                     border-color: var(--secondary);
                     background: var(--secondary);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .courseCatalogPage, .courseDetailPage{
+        margin: 3rem 1rem;
+
+        .courseGrid{
+            display: flex;
+            flex-direction: column;
+
+            .courseCard{
+                .courseButtons{
+                    .manageButton, .courseEditButton, .courseDeleteButton{
+                        font-size: 0.7rem;
+                    }
+                }
+
+                .courseCardContent{
+                    margin-top: 3rem;
                 }
             }
         }

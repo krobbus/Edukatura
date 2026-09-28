@@ -114,3 +114,14 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .authCard {
+        margin: 5rem 1rem;
+
+        .authForm .formGrid {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
