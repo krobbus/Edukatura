@@ -6,7 +6,7 @@ export default function NotFound() {
             <div className="notFoundCard">
                 <h1 className="notFoundTitle">That page does not exist</h1>
                 <p className="notFoundText">
-                    The link may be out of date, or the class or assignment may have been removed.
+                    The link may be out of date, or the course and courseworks may have been removed.
                 </p>
 
                 <Link className="notFoundAction" to="/dashboard">
