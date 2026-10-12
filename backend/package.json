@@ -9,7 +9,7 @@
     "devStart": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Alef Justin Loresca",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.3",
