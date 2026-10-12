@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
     --main: #2A6B5C;
     --secondary: #123F36;
@@ -10,19 +12,10 @@
     --muted: #64748b;
     --panel: #fff;
     --page-bg: #b7e1cc;
-    --line: #e5e7eb;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: var(--body);
+    --line: #69696a;
 }
 
 body {
-    font-family: var(--body);
-    color: var(--shadow);
     background-color: var(--page-bg);
     background-image:
         linear-gradient(rgba(42, 107, 92, 0.08) 1px, transparent 1px),

@@ -74,7 +74,7 @@ export default function AssignmentForm() {
                 description: form.description,
                 dueDate: new Date(form.dueDate).toISOString(),
                 maxPoints: Number(form.maxPoints),
-                module: form.module || null 
+                module: form.module || null
             };
 
             if (isEditing) {
@@ -96,69 +96,96 @@ export default function AssignmentForm() {
     if (loadingData) return <Loading label="Loading assignment details..." />;
 
     return (
-        <section className="assignmentFormPage">
-            <p className="assignmentBreadcrumb">
-                <Link to={`/courses/${courseId}`}>
+        <section className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-8">
+            <p>
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${courseId}`}>
                     ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
                 </Link>
             </p>
 
             {isEditing &&
-                <div className="assignmentCard">
-                    <div className="assignmentCardContent">
-                        <strong className="assignmentLabel">Saved details</strong>
+                <div className="rounded-xl border border-[var(--line)] border-l-4 border-l-[var(--main)] bg-[var(--panel)] p-5 shadow-sm">
+                    <div className="flex flex-col gap-2">
+                        <strong className="text-xs font-bold uppercase tracking-widest text-[var(--main)]">Saved details</strong>
 
-                        <div className="assignmentHeading">
-                            <h2>{form.title || 'Assignment Title'}</h2>
+                        <div className="flex flex-col gap-1.5">
+                            <h2 className="font-[family-name:var(--headings)] text-xl font-semibold text-[var(--secondary)]">{form.title || 'Assignment Title'}</h2>
 
-                            <div className="assignmentSubheading">
-                                <span className={`dueDate ${meta.className}`}>{meta.label}</span>
+                            <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-[var(--muted)]">
+                                <span className={meta.className}>{meta.label}</span>
                                 <span>Max points: {form.maxPoints}</span>
                             </div>
                         </div>
 
-                        {form.description && <p className='assignmentDescription'>{form.description}</p>}
+                        {form.description && <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--shadow)]">{form.description}</p>}
                     </div>
                 </div>
             }
 
-            <form className="assignmentForm" onSubmit={submit}>
-                <h2>{isEditing ? 'Edit assignment' : 'New assignment'}</h2>
+            <form className="flex flex-col gap-5 rounded-xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm" onSubmit={submit}>
+                <h2 className="font-[family-name:var(--headings)] text-2xl font-semibold text-[var(--secondary)]">{isEditing ? 'Edit assignment' : 'New assignment'}</h2>
                 <ErrorNote error={error} />
 
-                <div className="formGrid">
-                    <div className="formField">
-                        <label htmlFor="a-title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <input id="a-title" name="title" placeholder="Assignment title" maxLength={100} value={form.title} onChange={change} required />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="a-title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
+                        <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="a-title" name="title" placeholder="Assignment title" maxLength={100} value={form.title} onChange={change} required
+                        />
                     </div>
 
-                    <div className="formField">
-                        <label htmlFor="a-module">Module</label>
-                        <select id="a-module" name="module" value={form.module} onChange={change}><option value="">No module</option>{modules.map((module) => <option key={module._id} value={module._id}>{module.title}</option>)}</select>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="a-module">Module</label>
+                        <select
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="a-module" name="module" value={form.module} onChange={change}
+                        >
+                            <option value="">No module</option>
+                            {modules.map((module) => <option key={module._id} value={module._id}>{module.title}</option>)}
+                        </select>
                     </div>
 
-                    <div className="formField span">
-                        <label htmlFor="a-desc">Instructions <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <textarea id="a-desc" name="description" placeholder="Explain what learners need to do" rows={5} value={form.description} onChange={change} required />
+                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="a-desc">Instructions <span className="requiredMarker" aria-hidden="true">*</span></label>
+                        <textarea
+                            className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="a-desc" name="description" placeholder="Explain what learners need to do" rows={5} value={form.description} onChange={change} required
+                        />
                     </div>
 
-                    <div className="formField">
-                        <label htmlFor="a-due">Due date <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <input id="a-due" name="dueDate" type="datetime-local" placeholder="Choose a due date" min={toInputDateTime(Date.now())} value={form.dueDate} onChange={change} required />
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="a-due">Due date <span className="requiredMarker" aria-hidden="true">*</span></label>
+                        <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="a-due" name="dueDate" type="datetime-local" placeholder="Choose a due date" min={toInputDateTime(Date.now())} value={form.dueDate} onChange={change} required
+                        />
                     </div>
 
-                    <div className="formField">
-                        <label htmlFor="a-points">Max Points</label>
-                        <input id="a-points" name="maxPoints" type="number" placeholder="100" min={1} value={form.maxPoints} onChange={change} />
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="a-points">Max Points</label>
+                        <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="a-points" name="maxPoints" type="number" placeholder="100" min={1} value={form.maxPoints} onChange={change}
+                        />
                     </div>
                 </div>
 
-                <div className="formActions">
-                    <button className="submitButton" disabled={busy}>
+                <div className="flex flex-wrap gap-3">
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg bg-[var(--main)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                        disabled={busy}
+                    >
                         {busy ? (isEditing ? 'Saving…' : 'Posting…') : (isEditing ? 'Save changes' : 'Post assignment')}
                     </button>
 
-                    <button className="cancelButton" type="button" onClick={() => navigate(`/courses/${courseId}`)}>Cancel</button>
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--highlight)] cursor-pointer"
+                        type="button"
+                        onClick={() => navigate(`/courses/${courseId}`)}
+                    >
+                        Cancel
+                    </button>
                 </div>
             </form>
         </section>

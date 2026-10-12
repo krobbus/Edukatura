@@ -1,46 +1,21 @@
 import { Navigate, Route, Routes } from 'react-router';
 
 import './styles/base.css';
-import './styles/auth.css';
-import './styles/dashboard.css';
-import './styles/courses.css';
-import './styles/grading.css';
-import './styles/users.css';
-
-// components
-import './styles/components/loading.css';
-import './styles/components/layout.css';
-import './styles/components/notFound.css';
-import './styles/components/emptyState.css';
-import './styles/components/errorNote.css';
-
-// views
-import './styles/views/courseDetail.css';
-import './styles/views/assignmentDetail.css';
-import './styles/views/quizDetail.css';
-
-// forms
-import './styles/forms/courseForm.css';
-import './styles/forms/moduleForm.css';
-import './styles/forms/assignmentForm.css';
-import './styles/forms/quizForm.css';
 
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
+import NotFound from './components/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import Grading from './pages/Grading';
 import Users from './pages/Users';
-import NotFound from './pages/NotFound';
 
-// views
 import CourseDetail from './pages/views/CourseDetail';
 import AssignmentDetail from './pages/views/AssignmentDetail';
 import QuizDetail from './pages/views/QuizDetail';
 
-// forms
 import CourseForm from './pages/forms/CourseForm';
 import ModuleForm from './pages/forms/ModuleForm';
 import AssignmentForm from './pages/forms/AssignmentForm';

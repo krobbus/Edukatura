@@ -78,14 +78,15 @@ export default function Users() {
     });
 
     return (
-        <div className="usersPage">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-8">
             <header>
-                <h1>Users</h1>
-                <p>Manage accounts, roles, and access in one place.</p>
+                <h1 className="font-[family-name:var(--headings)] text-3xl font-bold text-[var(--secondary)]">Users</h1>
+                <p className="mt-1 text-sm text-[var(--muted)]">Manage accounts, roles, and access in one place.</p>
             </header>
 
-            <div className="userSearch">
+            <div className="flex flex-wrap gap-3">
                 <input
+                    className="min-w-[240px] flex-1 rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                     placeholder="Search by name or email"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -93,6 +94,7 @@ export default function Users() {
                 />
 
                 <select
+                    className="rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm capitalize text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                     aria-label="Filter by role"
@@ -111,45 +113,46 @@ export default function Users() {
             ) : existingUsers.length === 0 ? (
                 <EmptyState title="Nobody matches that" body="Try a different name, email, or role." />
             ) : (
-                <div className="userTableContainer">
-                    <table className="userTable">
-                        <thead>
+                <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--panel)] shadow-sm">
+                    <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+                        <thead className="bg-[var(--secondary)] text-white">
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Joined</th>
-                                <th>Role</th>
+                                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Name</th>
+                                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Email</th>
+                                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Joined</th>
+                                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Role</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {existingUsers.map((u) => (
-                                <tr key={u._id}>
-                                    <td>
+                                <tr className="border-t border-[var(--line)] transition hover:bg-[var(--main)]/5" key={u._id}>
+                                    <td className="px-4 py-3 align-middle font-medium text-[var(--shadow)]">
                                         {editingId === u._id ? (
-                                            <div className="userNameFields">
-                                                <input value={editForm.firstName} onChange={(e) => setEditForm((form) => ({ ...form, firstName: e.target.value }))} aria-label="First name" />
-                                                <input value={editForm.middleName} onChange={(e) => setEditForm((form) => ({ ...form, middleName: e.target.value }))} aria-label="Middle name" />
-                                                <input value={editForm.lastName} onChange={(e) => setEditForm((form) => ({ ...form, lastName: e.target.value }))} aria-label="Last name" />
+                                            <div className="flex flex-col gap-1.5">
+                                                <input className="w-full rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-sm focus:border-[var(--main)] focus:outline-none" value={editForm.firstName} onChange={(e) => setEditForm((form) => ({ ...form, firstName: e.target.value }))} aria-label="First name" />
+                                                <input className="w-full rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-sm focus:border-[var(--main)] focus:outline-none" value={editForm.middleName} onChange={(e) => setEditForm((form) => ({ ...form, middleName: e.target.value }))} aria-label="Middle name" />
+                                                <input className="w-full rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-sm focus:border-[var(--main)] focus:outline-none" value={editForm.lastName} onChange={(e) => setEditForm((form) => ({ ...form, lastName: e.target.value }))} aria-label="Last name" />
                                             </div>
                                         ) : fullName(u)}
                                     </td>
 
-                                    <td>
+                                    <td className="px-4 py-3 align-middle text-[var(--muted)]">
                                         {editingId === u._id ? (
-                                            <input className="userCellInput" type="email" value={editForm.email} onChange={(e) => setEditForm((form) => ({ ...form, email: e.target.value }))} aria-label="Email" />
+                                            <input className="w-full rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-sm text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none" type="email" value={editForm.email} onChange={(e) => setEditForm((form) => ({ ...form, email: e.target.value }))} aria-label="Email" />
                                         ) : u.email}
                                     </td>
 
-                                    <td>
+                                    <td className="px-4 py-3 align-middle text-[var(--muted)]">
                                         {editingId === u._id ? (
-                                            <input className="userCellInput" type="date" value={editForm.createdAt} onChange={(e) => setEditForm((form) => ({ ...form, createdAt: e.target.value }))} aria-label="Joined date" />
+                                            <input className="w-full rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-sm text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none" type="date" value={editForm.createdAt} onChange={(e) => setEditForm((form) => ({ ...form, createdAt: e.target.value }))} aria-label="Joined date" />
                                         ) : formatDate(u.createdAt, false)}
                                     </td>
 
-                                    <td>
-                                        <div className="userRoleActions">
+                                    <td className="px-4 py-3 align-middle">
+                                        <div className="flex flex-wrap items-center gap-2">
                                             <select
+                                                className="rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-sm capitalize text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none"
                                                 value={editingId === u._id ? editForm.role : u.role}
                                                 onChange={(e) => {
                                                     if (editingId === u._id) setEditForm((form) => ({ ...form, role: e.target.value }));
@@ -159,14 +162,14 @@ export default function Users() {
                                             >
                                                 {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
                                             </select>
-                                            
+
                                             {editingId === u._id ? (
                                                 <>
-                                                    <button className="saveButton" type="button" onClick={() => saveUser(u._id)} disabled={saving} aria-label="Save user" title="Save user">Save</button>
-                                                    <button className="cancelButton" type="button" onClick={cancelEditing} disabled={saving} aria-label="Cancel editing" title="Cancel editing">Cancel</button>
+                                                    <button className="inline-flex items-center rounded-lg bg-[var(--main)] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60" type="button" onClick={() => saveUser(u._id)} disabled={saving} aria-label="Save user" title="Save user">Save</button>
+                                                    <button className="inline-flex items-center rounded-lg border border-[var(--line)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--secondary)] transition hover:bg-[var(--highlight)] disabled:cursor-not-allowed disabled:opacity-60" type="button" onClick={cancelEditing} disabled={saving} aria-label="Cancel editing" title="Cancel editing">Cancel</button>
                                                 </>
                                             ) : (
-                                                <button className="editButton" type="button" onClick={() => startEditing(u)} aria-label={`Edit ${fullName(u)}`} title="Edit user">Edit</button>
+                                                <button className="inline-flex items-center rounded-lg border border-[var(--main)] px-3 py-1.5 text-xs font-semibold text-[var(--main)] transition hover:bg-[var(--main)] hover:text-white" type="button" onClick={() => startEditing(u)} aria-label={`Edit ${fullName(u)}`} title="Edit user">Edit</button>
                                             )}
                                         </div>
                                     </td>
