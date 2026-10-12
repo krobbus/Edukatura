@@ -101,29 +101,29 @@ export default function Grading() {
     const meta = dueMeta(item.dueDate);
 
     function applyGrade(updated) {
-        setSubmissions((list) => 
+        setSubmissions((list) =>
             list.map((s) => {
                 if (s._id !== updated._id) return s;
 
-                const student = typeof updated.student === 'object' && updated.student ? updated.student : s.student;
-                return { ...s, ...updated, student };
+                const learner = typeof updated.learner === 'object' && updated.learner ? updated.learner : s.learner;
+                return { ...s, ...updated, learner };
             })
         );
     }
 
     return (
-        <div className="gradingPage">
-            <p className="gradingBreadcrumb">
-                <Link to={`/courses/${activeCourseId}/${courseworkType}/${itemId}`}>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 py-8">
+            <p>
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${activeCourseId}/${courseworkType}/${itemId}`}>
                     ⟵ {item.title}
                 </Link>
             </p>
 
-            <header>
+            <header className="relative flex flex-col gap-2 rounded-xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm">
                 {canTeach && (
-                    <div className="courseworkActions">
+                    <div className="flex items-center gap-2 sm:absolute sm:right-5 sm:top-5">
                         <Link
-                            className="editButton"
+                            className="inline-flex items-center rounded-lg border border-[var(--main)] px-3 py-1.5 text-xs font-semibold text-[var(--main)] transition hover:bg-[var(--main)] hover:text-white"
                             to={`/courses/${activeCourseId}/${courseworkType}/${itemId}/edit`}
                             aria-label={`Edit ${isQuiz ? 'quiz' : 'assignment'} ${item.title}`}
                             title={`Edit ${isQuiz ? 'quiz' : 'assignment'}`}
@@ -132,7 +132,7 @@ export default function Grading() {
                         </Link>
 
                         <button
-                            className="deleteButton"
+                            className="inline-flex items-center rounded-lg border border-[var(--danger)] px-3 py-1.5 text-xs font-semibold text-[var(--danger)] transition hover:bg-[var(--danger)] hover:text-white"
                             type="button"
                             onClick={deleteItem}
                             aria-label={`Delete ${isQuiz ? 'quiz' : 'assignment'} ${item.title}`}
@@ -142,30 +142,34 @@ export default function Grading() {
                         </button>
                     </div>
                 )}
-                
-                {course?.courseCode && <span>{course.courseCode}</span>}
-                <h1>{item.title}</h1>
-                <p className={`assignmentDueBadge ${meta.className}`}>
+
+                {course?.courseCode && <span className="text-xs font-bold uppercase tracking-widest text-[var(--main)]">{course.courseCode}</span>}
+                <h1 className="font-[family-name:var(--headings)] text-3xl font-bold text-[var(--secondary)]">{item.title}</h1>
+                <p className={`self-start rounded-full bg-[var(--main)]/10 px-3 py-1 text-xs font-semibold text-[var(--secondary)] ${meta.className}`}>
                     {meta.label} · {item.maxPoints} points
                 </p>
             </header>
 
             {turnedIn.length === 0 ? (
-                <EmptyState title="Nothing turned in yet" body="Submissions appear here as students turn work in." />
+                <EmptyState title="Nothing turned in yet" body="Submissions appear here as learners turn work in." />
             ) : (
-                <div className="gradingLayout">
-                    <ul className="submissionList">
+                <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
+                    <ul className="flex flex-col gap-2 self-start">
                         {turnedIn.map((s) => (
                             <li key={s._id}>
                                 <button
                                     type="button"
-                                    className={`submissionPicker${s._id === selectedId ? ' active' : ''}`}
+                                    className={`flex w-full flex-col gap-1 rounded-lg border px-3 py-2.5 text-left transition ${
+                                        s._id === selectedId
+                                            ? 'border-[var(--main)] bg-[var(--main)]/10'
+                                            : 'border-[var(--line)] bg-[var(--panel)] hover:border-[var(--main)]'
+                                    }`}
                                     onClick={() => setSelectedId(s._id)}
                                     aria-current={s._id === selectedId}
                                 >
-                                    <span className="submissionPickerName">{fullName(s.student)}</span>
-                                    <span className="submissionPickerMeta">
-                                        <span className={`submissionStatusDot ${s.status === 'submitted' ? 'submittedStatus' : 'gradedStatus'}`} />
+                                    <span className="text-sm font-semibold text-[var(--shadow)]">{fullName(s.learner)}</span>
+                                    <span className="flex items-center gap-2 text-xs text-[var(--muted)]">
+                                        <span className={`inline-block h-2 w-2 rounded-full ${s.status === 'submitted' ? 'bg-[var(--warning)]' : 'bg-[var(--main)]'}`} />
                                         {s.status === 'graded'
                                             ? `${s.grade} / ${item?.maxPoints}`
                                             : formatDate(s.submittedAt, false)}
@@ -185,7 +189,7 @@ export default function Grading() {
                             onGraded={applyGrade}
                         />
                     ) : (
-                        <EmptyState title="Pick a student" body="Choose a submission from the list to review it." />
+                        <EmptyState title="Pick a learner" body="Choose a submission from the list to review it." />
                     )}
                 </div>
             )}
@@ -202,10 +206,10 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
 
     let parsedAnswers = submission?.answers;
     if (typeof parsedAnswers === 'string') {
-        try { 
-            parsedAnswers = JSON.parse(parsedAnswers); 
-        } catch (e) { 
-            parsedAnswers = {}; 
+        try {
+            parsedAnswers = JSON.parse(parsedAnswers);
+        } catch (e) {
+            parsedAnswers = {};
         }
     }
     if (!parsedAnswers) {
@@ -218,15 +222,15 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
 
         let correctCount = 0;
         questions.forEach((q, idx) => {
-            const studentAns = Array.isArray(parsedAnswers)
+            const learnerAnswer = Array.isArray(parsedAnswers)
                 ? parsedAnswers[idx]
                 : parsedAnswers[idx] ?? parsedAnswers[q._id];
 
             const correctText = q.choices?.[Number(q.correctAnswer)];
             if (
-                studentAns != null &&
-                (String(studentAns) === String(q.correctAnswer) ||
-                    String(studentAns) === String(correctText))
+                learnerAnswer != null &&
+                (String(learnerAnswer) === String(q.correctAnswer) ||
+                    String(learnerAnswer) === String(correctText))
             ) {
                 correctCount += 1;
             }
@@ -261,54 +265,60 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
     const isReadOnlyGrade = isQuiz;
 
     return (
-        <section className="gradingPanel">
-            <h2>{fullName(submission.student)}</h2>
-            <p className="gradingMeta">Turned in {formatDate(submission.submittedAt)}</p>
+        <section className="flex flex-col gap-4 rounded-xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm">
+            <div>
+                <h2 className="font-[family-name:var(--headings)] text-2xl font-semibold text-[var(--secondary)]">{fullName(submission.learner)}</h2>
+                <p className="mt-1 text-xs text-[var(--muted)]">Turned in {formatDate(submission.submittedAt)}</p>
+            </div>
 
             {item?.description && (
-                <div className="gradingInstructionText">
-                    <h3>Instructions</h3>
-                    <p className="textBlock">{item.description}</p>
+                <div className="rounded-lg bg-[var(--page-bg)]/40 p-4">
+                    <h3 className="mb-1 text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Instructions</h3>
+                    <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--shadow)]">{item.description}</p>
                 </div>
             )}
 
             {submission.submissionText ? (
-                <span className="gradingSubmissionText">
-                    <h3>Answer</h3>
+                <span className="block whitespace-pre-line rounded-lg border border-[var(--line)] p-4 text-sm leading-relaxed text-[var(--shadow)]">
+                    <h3 className="mb-1 text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Answer</h3>
                     {submission.submissionText}
                 </span>
             ) : (
-                !isQuiz && <p className="gradingEmptyMessage">No written answer.</p>
+                !isQuiz && <p className="text-sm italic text-[var(--muted)]">No written answer.</p>
             )}
 
             {submission.fileUrl && (
-                <p className="gradingAttachmentLink">
-                    <a href={submission.fileUrl} target="_blank" rel="noreferrer">
+                <p>
+                    <a className="text-sm font-semibold text-[var(--main)] underline hover:text-[var(--secondary)]" href={submission.fileUrl} target="_blank" rel="noreferrer">
                         Open attached file
                     </a>
                 </p>
             )}
 
             {isQuiz && item?.questions && (
-                <div className="quizGradingReview">
-                    <h3>Quiz Responses</h3>
-                    <button className="calculateButton" type='button' onClick={handleAutoGradeQuiz}>
+                <div className="flex flex-col gap-3">
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Quiz Responses</h3>
+                    <button
+                        className="self-start rounded-lg border border-[var(--main)] px-3 py-1.5 text-xs font-semibold text-[var(--main)] transition hover:bg-[var(--main)] hover:text-white"
+                        type="button"
+                        onClick={handleAutoGradeQuiz}
+                    >
                         Auto-calculate Grade
                     </button>
 
-                    <ol className="quizQuestionList">
+                    <ol className="flex list-decimal flex-col gap-3 pl-5 marker:font-semibold marker:text-[var(--main)]">
                         {item.questions.map((q, qIdx) => {
-                            const studentAns = Array.isArray(submission.answers) ? submission.answers[qIdx] : submission.answers?.[qIdx];
+                            const learnerAnswer = Array.isArray(submission.answers) ? submission.answers[qIdx] : submission.answers?.[qIdx];
                             return (
-                                <li key={qIdx} className="quizQuestionCard">
-                                    <h3>{q.prompt}</h3>
+                                <li key={qIdx} className="rounded-lg border border-[var(--line)] p-4">
+                                    <h3 className="text-sm font-semibold text-[var(--shadow)]">{q.prompt}</h3>
 
-                                    <ul className="quizChoiceList">
+                                    <ul className="mt-2 flex flex-col gap-1 text-sm text-[var(--shadow)]">
                                         {q.choices.map((choice, cIdx) => (
                                             <li key={cIdx}>
                                                 {choice}
-                                                {q.correctAnswer === cIdx && <strong> ✓ Correct</strong>}
-                                                {studentAns === cIdx && <strong> (Student Answer)</strong>}
+                                                {q.correctAnswer === cIdx && <strong className="text-[var(--main)]"> ✓ Correct</strong>}
+                                                {learnerAnswer === cIdx && <strong className="text-[var(--warning)]"> (Learner Answer)</strong>}
                                             </li>
                                         ))}
                                     </ul>
@@ -319,16 +329,17 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
                 </div>
             )}
 
-            <form onSubmit={submit}>
+            <form className="flex flex-col gap-4" onSubmit={submit}>
                 <ErrorNote error={error} />
 
-                <div className="formGrid">
-                    <div className="formField span">
-                        <label htmlFor="grade">
+                <div className="grid grid-cols-1 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="grade">
                             Grade <span className="requiredMarker" aria-hidden="true" hidden={isReadOnlyGrade}>*</span>
                         </label>
-                        <div className="gradeInputGroup">
+                        <div className="flex items-center gap-2">
                             <input
+                                className="w-28 rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] read-only:bg-[var(--highlight)]/60 focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                                 id="grade"
                                 type="number"
                                 min={0}
@@ -343,23 +354,24 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
                                     setSaved(false);
                                 }}
                                 style={
-                                    isReadOnlyGrade ? 
-                                        { 
-                                            pointerEvents: 'none', 
+                                    isReadOnlyGrade ?
+                                        {
+                                            pointerEvents: 'none',
                                             userSelect: 'none'
                                         } : undefined
                                 }
                                 required
                             />
-                            <span className="gradeUnit">/ {maxPoints}</span>
+                            <span className="text-sm font-medium text-[var(--muted)]">/ {maxPoints}</span>
                         </div>
                     </div>
 
-                    <div className="formField span">
-                        <label htmlFor="feedback">Feedback</label>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="feedback">Feedback</label>
                         <textarea
+                            className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                             id="feedback"
-                            placeholder="Add feedback for the student"
+                            placeholder="Add feedback for the learner"
                             rows={5}
                             maxLength={100}
                             value={feedback}
@@ -371,11 +383,14 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
                     </div>
                 </div>
 
-                <div className="gradingActions">
-                    <button className="saveButton" disabled={busy}>
+                <div className="flex items-center gap-3">
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg bg-[var(--main)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+                        disabled={busy}
+                    >
                         {busy ? 'Saving…' : submission.status === 'graded' ? 'Update grade' : 'Save grade'}
                     </button>
-                    {saved && <span className="saveStatus">Grade saved.</span>}
+                    {saved && <span className="text-sm font-medium text-[var(--main)]">Grade saved.</span>}
                 </div>
             </form>
         </section>

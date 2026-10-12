@@ -148,7 +148,7 @@ export default function QuizForm() {
             } else {
                 await api.post('/quizzes', payload);
             }
-            
+
             navigate(`/courses/${courseId}`);
         } catch (submitError) {
             setError(submitError);
@@ -162,73 +162,100 @@ export default function QuizForm() {
     if (loadingData) return <Loading label="Loading quiz details..." />;
 
     return (
-        <section className="quizFormPage">
-            <p className="quizBreadcrumb">
-                <Link to={`/courses/${courseId}`}>
+        <section className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-8">
+            <p>
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${courseId}`}>
                     ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
                 </Link>
             </p>
 
             {isEditing &&
-                <div className="quizCard">
-                    <div className="quizCardContent">
-                        <strong className="quizLabel">Saved details</strong>
+                <div className="rounded-xl border border-[var(--line)] border-l-4 border-l-[var(--secondary)] bg-[var(--panel)] p-5 shadow-sm">
+                    <div className="flex flex-col gap-2">
+                        <strong className="text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">Saved details</strong>
 
-                        <div className="quizHeading">
-                            <h2>{form.title || 'Quiz Title'}</h2>
+                        <div className="flex flex-col gap-1.5">
+                            <h2 className="font-[family-name:var(--headings)] text-xl font-semibold text-[var(--secondary)]">{form.title || 'Quiz Title'}</h2>
 
-                            <div className="quizSubheading">
-                                <span className={`dueDate ${meta.className}`}>{meta.label}</span>
+                            <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-[var(--muted)]">
+                                <span className={meta.className}>{meta.label}</span>
                                 <span>Questions: {form.questions.length} · Max points: {form.maxPoints}</span>
                             </div>
                         </div>
 
-                        {form.description && <p>{form.description}</p>}
+                        {form.description && <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--shadow)]">{form.description}</p>}
                     </div>
                 </div>
             }
-            <form className="quizForm" onSubmit={submit}>
-                <h2>{isEditing ? 'Edit quiz' : 'New quiz'}</h2>
+            <form className="flex flex-col gap-5 rounded-xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm" onSubmit={submit}>
+                <h2 className="font-[family-name:var(--headings)] text-2xl font-semibold text-[var(--secondary)]">{isEditing ? 'Edit quiz' : 'New quiz'}</h2>
                 <ErrorNote error={error} />
 
-                <div className="formGrid">
-                    <div className="formField">
-                        <label htmlFor="q-title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <input id="q-title" name="title" placeholder="Quiz title" maxLength={100} value={form.title} onChange={change} required />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="q-title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
+                        <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="q-title" name="title" placeholder="Quiz title" maxLength={100} value={form.title} onChange={change} required
+                        />
                     </div>
 
-                    <div className="formField">
-                        <label htmlFor="q-module">Module</label>
-                        <select id="q-module" name="module" value={form.module} onChange={change}>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="q-module">Module</label>
+                        <select
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="q-module" name="module" value={form.module} onChange={change}
+                        >
                             <option value="">No module</option>
                             {modules.map((module) => <option key={module._id} value={module._id}>{module.title}</option>)}
                         </select>
                     </div>
 
-                    <div className="formField span">
-                        <label htmlFor="q-desc">Instructions <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <textarea id="q-desc" name="description" placeholder="Explain what students need to do" rows={5} value={form.description} onChange={change} required />
+                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="q-desc">Instructions <span className="requiredMarker" aria-hidden="true">*</span></label>
+                        <textarea
+                            className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="q-desc" name="description" placeholder="Explain what learners need to do" rows={5} value={form.description} onChange={change} required
+                        />
                     </div>
 
-                    <div className="formField">
-                        <label htmlFor="q-due">Due date <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <input id="q-due" name="dueDate" type="datetime-local" min={toInputDateTime(Date.now())} value={form.dueDate} onChange={change} required />
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="q-due">Due date <span className="requiredMarker" aria-hidden="true">*</span></label>
+                        <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="q-due" name="dueDate" type="datetime-local" min={toInputDateTime(Date.now())} value={form.dueDate} onChange={change} required
+                        />
                     </div>
 
-                    <div className="formField">
-                        <label htmlFor="q-points">Max points</label>
-                        <input id="q-points" name="maxPoints" type="number" min={1} value={form.maxPoints} onChange={change} />
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="q-points">Max points</label>
+                        <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            id="q-points" name="maxPoints" type="number" min={1} value={form.maxPoints} onChange={change}
+                        />
                     </div>
                 </div>
 
-                <div className="quizQuestions">
+                <div className="flex flex-col gap-4">
                     {form.questions.map((question, questionIndex) => (
-                        <fieldset className="quizQuestion" key={questionIndex}>
-                            <legend>Question {questionIndex + 1}</legend>
+                        <fieldset className="flex flex-col gap-4 rounded-xl border border-[var(--line)] p-5" key={questionIndex}>
+                            <legend className="px-2 text-sm font-bold text-[var(--main)]">Question {questionIndex + 1}</legend>
 
-                            <div className="formField quizPromptField">
-                                <label htmlFor={`q-${questionIndex}-prompt`}>Question <span className="requiredMarker" aria-hidden="true">*</span></label>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor={`q-${questionIndex}-prompt`}>Question <span className="requiredMarker" aria-hidden="true">*</span></label>
+                                    <button
+                                        className="self-end rounded-lg border border-[var(--danger)] px-3 py-1.5 text-xs font-semibold text-[var(--danger)] transition hover:bg-[var(--danger)] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                                        type="button"
+                                        onClick={() => removeQuestion(questionIndex)}
+                                        disabled={form.questions.length <= 1}
+                                    >
+                                        Remove question
+                                    </button>
+                                </div>
+
                                 <textarea
+                                    className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                                     id={`q-${questionIndex}-prompt`}
                                     value={question.prompt}
                                     onChange={(event) => changeQuestion(questionIndex, 'prompt', event.target.value)}
@@ -239,19 +266,25 @@ export default function QuizForm() {
                                 />
                             </div>
 
-                            <div className="quizChoices">
-                                <div className="quizSectionHeading">
-                                    <span>Choices</span>
-                                    <button type="button" className="inlineButton" onClick={() => addChoice(questionIndex)} disabled={question.choices.length >= 4}>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-semibold text-[var(--secondary)]">Choices</span>
+                                    <button
+                                        type="button"
+                                        className="rounded-md border border-[var(--line)] bg-[var(--main)] px-3 py-1.5 text-xs font-semibold text-[var(--panel)] transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                                        onClick={() => addChoice(questionIndex)}
+                                        disabled={question.choices.length >= 4}
+                                    >
                                         Add choice
                                     </button>
                                 </div>
 
                                 {question.choices.map((choice, choiceIndex) => (
-                                    <div className="quizChoiceRow" key={choiceIndex}>
-                                        <div className="formField">
-                                            <label htmlFor={`q-${questionIndex}-choice-${choiceIndex}`}>Choice {choiceIndex + 1}</label>
+                                    <div className="flex items-end gap-3" key={choiceIndex}>
+                                        <div className="flex flex-1 flex-col gap-1.5">
+                                            <label className="text-sm font-medium text-[var(--muted)]" htmlFor={`q-${questionIndex}-choice-${choiceIndex}`}>Choice {choiceIndex + 1}</label>
                                             <input
+                                                className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                                                 id={`q-${questionIndex}-choice-${choiceIndex}`}
                                                 value={choice}
                                                 onChange={(event) => changeChoice(questionIndex, choiceIndex, event.target.value)}
@@ -259,16 +292,24 @@ export default function QuizForm() {
                                                 required
                                             />
                                         </div>
-                                        <button type="button" className="inlineButton quizRemoveChoice" onClick={() => removeChoice(questionIndex, choiceIndex)} disabled={question.choices.length <= 2} aria-label={`Remove choice ${choiceIndex + 1}`}>
+
+                                        <button
+                                            type="button"
+                                            className="rounded-md border border-[var(--danger)] bg-white px-3 py-2.5 text-xs font-semibold text-[var(--danger)] transition hover:bg-[var(--danger)] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                                            onClick={() => removeChoice(questionIndex, choiceIndex)}
+                                            disabled={question.choices.length <= 2}
+                                            aria-label={`Remove choice ${choiceIndex + 1}`}
+                                        >
                                             Remove
                                         </button>
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="formField">
-                                <label htmlFor={`q-${questionIndex}-answer`}>Correct answer</label>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor={`q-${questionIndex}-answer`}>Correct answer <span className="requiredMarker" aria-hidden="true">*</span></label>
                                 <select
+                                    className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                                     id={`q-${questionIndex}-answer`}
                                     value={question.correctAnswer}
                                     onChange={(event) => changeQuestion(questionIndex, 'correctAnswer', event.target.value)}
@@ -276,21 +317,33 @@ export default function QuizForm() {
                                     {question.choices.map((_, choiceIndex) => <option key={choiceIndex} value={choiceIndex}>Choice {choiceIndex + 1}</option>)}
                                 </select>
                             </div>
-
-                            <button className="removeButton" type="button" onClick={() => removeQuestion(questionIndex)} disabled={form.questions.length <= 1}>
-                                Remove question
-                            </button>
                         </fieldset>
                     ))}
 
-                    <button className="addButton" type="button" onClick={addQuestion}>
+                    <button
+                        className="w-full rounded-lg border-2 border-dashed border-[var(--main)] px-4 py-2.5 text-sm font-semibold text-[var(--main)] transition hover:bg-[var(--main)]/10 cursor-pointer"
+                        type="button"
+                        onClick={addQuestion}
+                    >
                         Add question
                     </button>
                 </div>
 
-                <div className="formActions">
-                    <button className="submitButton" disabled={busy}>{busy ? (isEditing ? 'Saving…' : 'Creating…') : (isEditing ? 'Save changes' : 'Create quiz')}</button>
-                    <button className="cancelButton" type="button" onClick={() => navigate(`/courses/${courseId}`)}>Cancel</button>
+                <div className="flex flex-wrap gap-3">
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg bg-[var(--main)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                        disabled={busy}
+                    >
+                        {busy ? (isEditing ? 'Saving…' : 'Creating…') : (isEditing ? 'Save changes' : 'Create quiz')}
+                    </button>
+
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--highlight)] cursor-pointer"
+                        type="button"
+                        onClick={() => navigate(`/courses/${courseId}`)}
+                    >
+                        Cancel
+                    </button>
                 </div>
             </form>
         </section>

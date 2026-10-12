@@ -5,7 +5,7 @@ import { capitalizeFirstLetter } from '../../utils';
 import ErrorNote from '../../components/ErrorNote';
 import Loading from '../../components/Loading';
 
-export default function ModuleForm() {
+export default function ModuleForm({ onCreated, onToggle }) {
     const navigate = useNavigate();
     const { courseId, moduleId } = useParams();
     const isEditing = Boolean(moduleId);
@@ -27,7 +27,7 @@ export default function ModuleForm() {
     useEffect(() => {
         if (!isEditing) return;
 
-        const fetchModule = api.get(`/modules/${moduleId}`).catch(() => 
+        const fetchModule = api.get(`/modules/${moduleId}`).catch(() =>
             api.get(`/modules?course=${courseId}`).then((res) => {
                 const list = res.modules ?? res ?? [];
                 const found = list.find((m) => m._id === moduleId);
@@ -70,9 +70,9 @@ export default function ModuleForm() {
         setError(null);
         try {
             const data = await api.post('/modules', { ...form, course: courseId });
-            onCreated(data.module ?? data);
-            setForm({ title: '', description: '' });
-            onToggle();
+            if (onCreated) onCreated(data.module ?? data);
+            if (!isEditing) setForm({ title: '', description: '' });
+            if (onToggle) onToggle();
         } catch (submitError) {
             setError(submitError);
         } finally {
@@ -83,33 +83,34 @@ export default function ModuleForm() {
     if (loadingData) return <Loading label="Loading module details..." />;
 
     return (
-        <section className="moduleFormPage">
-            <p className="moduleBreadcrumb">
-                <Link to={`/courses/${courseId}`}>
+        <section className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-8">
+            <p>
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${courseId}`}>
                     ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
                 </Link>
             </p>
-            
+
             {isEditing &&
-                <div className="moduleCard">
-                    <div className="moduleCardContent">
-                        <div className="moduleHeading">
-                            <h2>{form.title || 'Module Title'}</h2>
-                            <span className="assignmentCount">Assignments ({assignments.length}) · Quizzes ({quizzes.length})</span>
+                <div className="rounded-xl border border-[var(--line)] border-l-4 border-l-[var(--secondary)] bg-[var(--panel)] p-5 shadow-sm">
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-1">
+                            <h2 className="font-[family-name:var(--headings)] text-xl font-semibold text-[var(--secondary)]">{form.title || 'Module Title'}</h2>
+                            <span className="text-xs font-medium text-[var(--muted)]">Assignments ({assignments.length}) · Quizzes ({quizzes.length})</span>
                         </div>
-                        {form.description && <p className="moduleDescription">{form.description}</p>}
+                        {form.description && <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--muted)]">{form.description}</p>}
                     </div>
                 </div>
             }
 
-            <form className="moduleForm" onSubmit={submit}>
-                <h2>{isEditing ? 'Edit module' : 'New module'}</h2>
+            <form className="flex flex-col gap-5 rounded-xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm" onSubmit={submit}>
+                <h2 className="font-[family-name:var(--headings)] text-2xl font-semibold text-[var(--secondary)]">{isEditing ? 'Edit module' : 'New module'}</h2>
                 <ErrorNote error={error} />
 
-                <div className="formGrid">
-                    <div className="formField span">
-                        <label htmlFor="m-title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
+                <div className="grid grid-cols-1 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="m-title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
                         <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                             id="m-title"
                             name="title"
                             placeholder="Module title"
@@ -120,9 +121,10 @@ export default function ModuleForm() {
                         />
                     </div>
 
-                    <div className="formField span">
-                        <label htmlFor="m-desc">Description</label>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="m-desc">Description</label>
                         <textarea
+                            className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                             id="m-desc"
                             name="description"
                             placeholder="Describe this module"
@@ -133,12 +135,19 @@ export default function ModuleForm() {
                     </div>
                 </div>
 
-                <div className="formActions">
-                    <button className="submitButton" disabled={busy}>
+                <div className="flex flex-wrap gap-3">
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg bg-[var(--main)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                        disabled={busy}
+                    >
                         {busy ? (isEditing ? 'Saving…' : 'Adding…') : (isEditing ? 'Save changes' : 'Add module')}
                     </button>
 
-                    <button className="cancelButton" type="button" onClick={() => navigate(`/courses/${courseId}`)}>
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--highlight)] cursor-pointer"
+                        type="button"
+                        onClick={() => navigate(`/courses/${courseId}`)}
+                    >
                         Cancel
                     </button>
                 </div>

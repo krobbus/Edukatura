@@ -48,10 +48,10 @@ export function AuthProvider({ children }) {
             login,
             register,
             logout,
-            isStudent: user?.role === 'student',
-            isFaculty: user?.role === 'faculty',
+            isLearner: user?.role === 'learner',
+            isInstructor: user?.role === 'instructor',
             isAdmin: user?.role === 'admin',
-            canTeach: user?.role === 'faculty' || user?.role === 'admin',
+            canTeach: user?.role === 'instructor' || user?.role === 'admin',
         }),
         [user, loading, login, register, logout]
     );

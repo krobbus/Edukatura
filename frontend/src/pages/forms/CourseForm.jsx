@@ -11,10 +11,10 @@ export default function CreateCourseForm() {
     const navigate = useNavigate();
     const { courseId } = useParams();
     const isEditing = Boolean(courseId);
-    
-    const [facultyUsers, setFacultyUsers] = useState([]);
+
+    const [instructorUsers, setInstructorUsers] = useState([]);
     const [originalCourse, setOriginalCourse] = useState(null);
-    const [form, setForm] = useState({ courseCode: '', title: '', description: '', faculty: '' });
+    const [form, setForm] = useState({ courseCode: '', title: '', description: '', instructor: '' });
 
     const [error, setError] = useState(null);
     const [busy, setBusy] = useState(false);
@@ -23,13 +23,13 @@ export default function CreateCourseForm() {
     useEffect(() => {
         if (!isAdmin) return;
         api.get('/users')
-            .then((data) => setFacultyUsers((data.users ?? data ?? []).filter((user) => user.role === 'faculty')))
+            .then((data) => setInstructorUsers((data.users ?? data ?? []).filter((user) => user.role === 'instructor')))
             .catch((err) => setError(err));
     }, [isAdmin]);
 
     useEffect(() => {
         if (!isEditing) return;
-        
+
         api.get(`/courses/${courseId}`)
             .then((data) => {
                 const course = data.course ?? data;
@@ -38,7 +38,7 @@ export default function CreateCourseForm() {
                     courseCode: course.courseCode ?? '',
                     title: course.title ?? '',
                     description: course.description ?? '',
-                    faculty: course.faculty?._id ?? course.faculty ?? '',
+                    instructor: course.instructor?._id ?? course.instructor ?? '',
                 });
             })
             .catch((err) => setError(err))
@@ -74,35 +74,41 @@ export default function CreateCourseForm() {
         }
     }
 
-    const selectedFacultyObj = facultyUsers.find(f => f._id === form.faculty) || originalCourse?.faculty;
+    const selectedInstructor = instructorUsers.find((user) => user._id === form.instructor) || originalCourse?.instructor;
 
     if (loadingData) return <Loading label="Loading course details..." />;
 
     return (
-        <section className='courseFormPage'>
-            <p className="courseBreadcrumb">
-                <Link to="/courses">⟵ All courses</Link>
+        <section className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-8">
+            <p>
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">⟵ All courses</Link>
             </p>
-            
+
             {isEditing &&
-                <div className="courseCard" style={{ '--spine': spineColor(form.courseCode || 'DEFAULT') }}>
-                    <div className="courseCardContent">
-                        <span className="courseCode">{form.courseCode?.toUpperCase() || 'CODE'}</span>
-                        <h2>{form.title || 'Course Title'}</h2>
-                        {selectedFacultyObj && typeof selectedFacultyObj === 'object' && <p>{fullName(selectedFacultyObj)}</p>}
-                        {form.description && <p className="textBlock">{form.description}</p>}
+                <div
+                    className="flex flex-col gap-3 rounded-xl border border-[var(--line)] border-l-8 border-l-[color:var(--spine)] bg-[var(--panel)] p-5 shadow-sm"
+                    style={{ '--spine': spineColor(form.courseCode || 'DEFAULT') }}
+                >
+                    <div className="flex flex-col gap-1.5">
+                        <span className="text-xs font-bold uppercase tracking-widest text-[var(--main)]">{form.courseCode?.toUpperCase() || 'CODE'}</span>
+                        <h2 className="font-[family-name:var(--headings)] text-xl font-semibold text-[var(--secondary)]">{form.title || 'Course Title'}</h2>
+                        {selectedInstructor && typeof selectedInstructor === 'object' && (
+                            <p className="text-sm font-medium text-[var(--muted)]">{fullName(selectedInstructor)}</p>
+                        )}
+                        {form.description && <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--shadow)]">{form.description}</p>}
                     </div>
                 </div>
             }
 
-            <form className="courseForm" onSubmit={submit}>
-                <h2>{isEditing ? 'Edit course' : 'New course'}</h2>
+            <form className="flex flex-col gap-5 rounded-xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm" onSubmit={submit}>
+                <h2 className="font-[family-name:var(--headings)] text-2xl font-semibold text-[var(--secondary)]">{isEditing ? 'Edit course' : 'New course'}</h2>
                 <ErrorNote error={error} />
 
-                <div className="formGrid">
-                    <div className="formField">
-                        <label htmlFor="courseCode">Course code <span className="requiredMarker" aria-hidden="true">*</span></label>
+                <div className="flex flex-col gap-4 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="courseCode">Course code <span className="requiredMarker" aria-hidden="true">*</span></label>
                         <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                             placeholder="e.g. CS101"
                             id="courseCode"
                             name="courseCode"
@@ -114,22 +120,26 @@ export default function CreateCourseForm() {
                     </div>
 
                     {isAdmin && (
-                        <div className="formField">
-                            <label htmlFor="faculty">Faculty handling this course <span className="requiredMarker" aria-hidden="true">*</span></label>
-                            <select id="faculty" name="faculty" value={form.faculty} onChange={change} required>
-                                <option value="">Select a faculty member</option>
-                                {facultyUsers.map((faculty) => (
-                                    <option key={faculty._id} value={faculty._id}>
-                                        {fullName(faculty)} ({faculty.email})
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="instructor">Instructor for this course <span className="requiredMarker" aria-hidden="true">*</span></label>
+                            <select
+                                className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                                id="instructor" name="instructor" value={form.instructor} onChange={change} required
+                            >
+                                <option value="">Select an instructor</option>
+                                {instructorUsers.map((instructor) => (
+                                    <option key={instructor._id} value={instructor._id}>
+                                        {fullName(instructor)} ({instructor.email})
                                     </option>
                                 ))}
                             </select>
                         </div>
                     )}
 
-                    <div className="formField span">
-                        <label htmlFor="title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="title">Title <span className="requiredMarker" aria-hidden="true">*</span></label>
                         <input
+                            className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
                             id="title"
                             name="title"
                             placeholder="Course title"
@@ -140,10 +150,11 @@ export default function CreateCourseForm() {
                         />
                     </div>
 
-                    <div className="formField span">
-                        <label htmlFor="description">Description</label>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="description">Description</label>
                         <textarea
-                            placeholder="What will students learn?"
+                            className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            placeholder="What will learners learn?"
                             id="description"
                             name="description"
                             rows={3}
@@ -153,12 +164,19 @@ export default function CreateCourseForm() {
                     </div>
                 </div>
 
-                <div className="formActions">
-                    <button className="submitButton" disabled={busy}>
+                <div className="flex flex-wrap gap-3">
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg bg-[var(--main)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                        disabled={busy}
+                    >
                         {busy ? 'Creating…' : 'Create course'}
                     </button>
 
-                    <button className="cancelButton" type="button" onClick={() => navigate('/courses')}>
+                    <button
+                        className="inline-flex items-center justify-center rounded-lg border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--highlight)] cursor-pointer"
+                        type="button"
+                        onClick={() => navigate('/courses')}
+                    >
                         Cancel
                     </button>
                 </div>
