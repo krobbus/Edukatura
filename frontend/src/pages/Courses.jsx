@@ -8,9 +8,8 @@ import ErrorNote from '../components/ErrorNote';
 import EmptyState from '../components/EmptyState';
 
 export default function Courses() {
-    const { canTeach, isAdmin } = useAuth();
+    const { canTeach } = useAuth();
     const [courses, setCourses] = useState([]);
-    const [facultyUsers, setFacultyUsers] = useState([]);
     const [state, setState] = useState({ loading: true, error: null });
 
     function load() {
@@ -23,14 +22,6 @@ export default function Courses() {
             .catch((err) => setState({ loading: false, error: err }));
     }
     useEffect(load, [canTeach]);
-
-    useEffect(() => {
-        if (!isAdmin) return;
-
-        api.get('/users')
-            .then((data) => setFacultyUsers((data.users ?? data ?? []).filter((user) => user.role === 'faculty')))
-            .catch((err) => setState((s) => ({ ...s, error: err })));
-    }, [isAdmin]);
 
     return (
         <section className="courseCatalogPage">
@@ -63,7 +54,7 @@ export default function Courses() {
             ) : (
                 <div className="courseGrid">
                     {courses.map((c) => (
-                        <CourseTile key={c._id} course={c} canTeach={canTeach} isAdmin={isAdmin} facultyUsers={facultyUsers} onChange={load} />
+                        <CourseTile key={c._id} course={c} canTeach={canTeach} onChange={load} />
                     ))}
                 </div>
             )}
@@ -150,7 +141,7 @@ function CourseTile({ course, canTeach, onChange }) {
             <div className="courseCardContent">
                 <span className="courseCode">{course.courseCode?.toUpperCase()}</span>
                 <h2>{course.title}</h2>
-                {course.faculty && typeof course.faculty === 'object' && <p>{fullName(course.faculty)}</p>}
+                {course.instructor && typeof course.instructor === 'object' && <p>{fullName(course.instructor)}</p>}
                 {course.description && <p className="textBlock">{course.description}</p>}
             </div>
 

@@ -139,7 +139,7 @@ export default function AssignmentForm() {
 
                     <div className="formField span">
                         <label htmlFor="a-desc">Instructions <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <textarea id="a-desc" name="description" placeholder="Explain what students need to do" rows={5} value={form.description} onChange={change} required />
+                        <textarea id="a-desc" name="description" placeholder="Explain what learners need to do" rows={5} value={form.description} onChange={change} required />
                     </div>
 
                     <div className="formField">

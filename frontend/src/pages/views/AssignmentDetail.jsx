@@ -121,7 +121,7 @@ export default function AssignmentDetail() {
                 {canTeach ? (
                     <section className="assignmentPanel assignmentSubmissionPanel">
                         <h2>Submissions</h2>
-                        <p className="panelDescription">Review and grade what students have turned in.</p>
+                        <p className="panelDescription">Review and grade what learners have turned in.</p>
 
                         <Link className='gradingButton' to={`/courses/${activeCourseId}/assignments/${assignmentId}/submissions`}>
                             Open grading

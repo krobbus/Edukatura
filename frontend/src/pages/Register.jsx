@@ -11,7 +11,7 @@ const BLANK = {
     email: '',
     password: '',
     confirm: '',
-    role: 'student',
+    role: 'learner',
 };
 
 export default function Register() {
@@ -87,8 +87,8 @@ export default function Register() {
                     <div className="formField">
                         <label htmlFor="role">I am a</label>
                         <select id="role" name="role" value={form.role} onChange={change}>
-                            <option value="student">Student</option>
-                            <option value="faculty">Faculty</option>
+                            <option value="learner">Learner</option>
+                            <option value="instructor">Instructor</option>
                         </select>
                     </div>
 

@@ -127,7 +127,7 @@ export default function CourseDetail() {
 
                 <span className="courseCode">{course.courseCode}</span>
                 <h1>{course.title}</h1>
-                {course.faculty && typeof course.faculty === 'object' && <p>Taught by {fullName(course.faculty)}</p>}
+                {course.instructor && typeof course.instructor === 'object' && <p>Taught by {fullName(course.instructor)}</p>}
                 {course.description && <p>{course.description}</p>}
             </header>
 
@@ -138,7 +138,7 @@ export default function CourseDetail() {
 
                 {canTeach && (
                     <button role="tab" aria-selected={tab === 'users'} onClick={() => setTab('users')}>
-                        Students ({roster.length})
+                        Learners ({roster.length})
                     </button>
                 )}
             </div>
@@ -214,13 +214,13 @@ export default function CourseDetail() {
 }
 
 function Roster({ roster }) {
-    if (roster.length === 0) return <EmptyState title="No students enrolled" body="Share the course code so students can enrol." />;
+    if (roster.length === 0) return <EmptyState title="No learners enrolled" body="Share the course code so learners can enrol." />;
     return (
-        <div className="studentsDataContainer">
+        <div className="learnersDataContainer">
             <table className="dataTable">
                 <thead>
                     <tr>
-                        <th>Student</th>
+                        <th>Learner</th>
                         <th>Email</th>
                         <th>Enrolled</th>
                     </tr>
@@ -228,8 +228,8 @@ function Roster({ roster }) {
                 <tbody>
                     {roster.map((enrollment) => (
                         <tr key={enrollment._id}>
-                            <td>{fullName(enrollment.student)}</td>
-                            <td>{enrollment.student?.email}</td>
+                            <td>{fullName(enrollment.learner)}</td>
+                            <td>{enrollment.learner?.email}</td>
                             <td>{formatDate(enrollment.enrolledAt, false)}</td>
                         </tr>
                     ))}

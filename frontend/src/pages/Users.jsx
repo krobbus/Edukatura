@@ -5,7 +5,7 @@ import Loading from '../components/Loading';
 import ErrorNote from '../components/ErrorNote';
 import EmptyState from '../components/EmptyState';
 
-const ROLES = ['student', 'faculty', 'admin'];
+const ROLES = ['learner', 'instructor', 'admin'];
 
 export default function Users() {
     const [users, setUsers] = useState([]);

@@ -196,7 +196,7 @@ export default function Dashboard() {
                                     >
                                         {canTeach && needsGrading[`${item.kind}-${item._id}`] > 0 && (
                                             <span className="announcementTag needsGrading">
-                                                {needsGrading[`${item.kind}-${item._id}`]} student needs to be graded
+                                                {needsGrading[`${item.kind}-${item._id}`]} learner needs to be graded
                                             </span>
                                         )}
 

@@ -73,7 +73,7 @@ export default function App() {
                     <Route path="/courses/:courseId/quizzes/new" element={<QuizForm />} />
                     <Route path="/courses/:courseId/quizzes/:quizId/edit" element={<QuizForm />} />
 
-                    <Route element={<ProtectedRoute allow={['faculty', 'admin']} />}>
+                    <Route element={<ProtectedRoute allow={['instructor', 'admin']} />}>
                         <Route path="/courses/:courseId/assignments/:assignmentId/submissions" element={<Grading />} />
                         <Route path="/courses/:courseId/quizzes/:quizId/submissions" element={<Grading />} />
                     </Route>

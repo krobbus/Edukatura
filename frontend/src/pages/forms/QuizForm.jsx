@@ -207,7 +207,7 @@ export default function QuizForm() {
 
                     <div className="formField span">
                         <label htmlFor="q-desc">Instructions <span className="requiredMarker" aria-hidden="true">*</span></label>
-                        <textarea id="q-desc" name="description" placeholder="Explain what students need to do" rows={5} value={form.description} onChange={change} required />
+                        <textarea id="q-desc" name="description" placeholder="Explain what learners need to do" rows={5} value={form.description} onChange={change} required />
                     </div>
 
                     <div className="formField">

@@ -218,7 +218,7 @@ export default function QuizDetail() {
                 {canTeach ? (
                     <section className="quizPanel quizSubmissionPanel">
                         <h2>Submissions</h2>
-                        <p className="panelDescription">Review and grade what students have turned in.</p>
+                        <p className="panelDescription">Review and grade what learners have turned in.</p>
 
                         <Link className="gradingButton" to={`/courses/${activeCourseId}/quizzes/${quizId}/submissions`}>
                             Open grading

@@ -12,9 +12,9 @@ export default function CreateCourseForm() {
     const { courseId } = useParams();
     const isEditing = Boolean(courseId);
     
-    const [facultyUsers, setFacultyUsers] = useState([]);
+    const [instructorUsers, setInstructorUsers] = useState([]);
     const [originalCourse, setOriginalCourse] = useState(null);
-    const [form, setForm] = useState({ courseCode: '', title: '', description: '', faculty: '' });
+    const [form, setForm] = useState({ courseCode: '', title: '', description: '', instructor: '' });
 
     const [error, setError] = useState(null);
     const [busy, setBusy] = useState(false);
@@ -23,7 +23,7 @@ export default function CreateCourseForm() {
     useEffect(() => {
         if (!isAdmin) return;
         api.get('/users')
-            .then((data) => setFacultyUsers((data.users ?? data ?? []).filter((user) => user.role === 'faculty')))
+            .then((data) => setInstructorUsers((data.users ?? data ?? []).filter((user) => user.role === 'instructor')))
             .catch((err) => setError(err));
     }, [isAdmin]);
 
@@ -38,7 +38,7 @@ export default function CreateCourseForm() {
                     courseCode: course.courseCode ?? '',
                     title: course.title ?? '',
                     description: course.description ?? '',
-                    faculty: course.faculty?._id ?? course.faculty ?? '',
+                    instructor: course.instructor?._id ?? course.instructor ?? '',
                 });
             })
             .catch((err) => setError(err))
@@ -74,7 +74,7 @@ export default function CreateCourseForm() {
         }
     }
 
-    const selectedFacultyObj = facultyUsers.find(f => f._id === form.faculty) || originalCourse?.faculty;
+    const selectedInstructor = instructorUsers.find((user) => user._id === form.instructor) || originalCourse?.instructor;
 
     if (loadingData) return <Loading label="Loading course details..." />;
 
@@ -89,7 +89,7 @@ export default function CreateCourseForm() {
                     <div className="courseCardContent">
                         <span className="courseCode">{form.courseCode?.toUpperCase() || 'CODE'}</span>
                         <h2>{form.title || 'Course Title'}</h2>
-                        {selectedFacultyObj && typeof selectedFacultyObj === 'object' && <p>{fullName(selectedFacultyObj)}</p>}
+                        {selectedInstructor && typeof selectedInstructor === 'object' && <p>{fullName(selectedInstructor)}</p>}
                         {form.description && <p className="textBlock">{form.description}</p>}
                     </div>
                 </div>
@@ -115,12 +115,12 @@ export default function CreateCourseForm() {
 
                     {isAdmin && (
                         <div className="formField">
-                            <label htmlFor="faculty">Faculty handling this course <span className="requiredMarker" aria-hidden="true">*</span></label>
-                            <select id="faculty" name="faculty" value={form.faculty} onChange={change} required>
-                                <option value="">Select a faculty member</option>
-                                {facultyUsers.map((faculty) => (
-                                    <option key={faculty._id} value={faculty._id}>
-                                        {fullName(faculty)} ({faculty.email})
+                            <label htmlFor="instructor">Instructor for this course <span className="requiredMarker" aria-hidden="true">*</span></label>
+                            <select id="instructor" name="instructor" value={form.instructor} onChange={change} required>
+                                <option value="">Select an instructor</option>
+                                {instructorUsers.map((instructor) => (
+                                    <option key={instructor._id} value={instructor._id}>
+                                        {fullName(instructor)} ({instructor.email})
                                     </option>
                                 ))}
                             </select>
@@ -143,7 +143,7 @@ export default function CreateCourseForm() {
                     <div className="formField span">
                         <label htmlFor="description">Description</label>
                         <textarea
-                            placeholder="What will students learn?"
+                            placeholder="What will learners learn?"
                             id="description"
                             name="description"
                             rows={3}

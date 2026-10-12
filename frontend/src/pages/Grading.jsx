@@ -105,8 +105,8 @@ export default function Grading() {
             list.map((s) => {
                 if (s._id !== updated._id) return s;
 
-                const student = typeof updated.student === 'object' && updated.student ? updated.student : s.student;
-                return { ...s, ...updated, student };
+                const learner = typeof updated.learner === 'object' && updated.learner ? updated.learner : s.learner;
+                return { ...s, ...updated, learner };
             })
         );
     }
@@ -151,7 +151,7 @@ export default function Grading() {
             </header>
 
             {turnedIn.length === 0 ? (
-                <EmptyState title="Nothing turned in yet" body="Submissions appear here as students turn work in." />
+                <EmptyState title="Nothing turned in yet" body="Submissions appear here as learners turn work in." />
             ) : (
                 <div className="gradingLayout">
                     <ul className="submissionList">
@@ -163,7 +163,7 @@ export default function Grading() {
                                     onClick={() => setSelectedId(s._id)}
                                     aria-current={s._id === selectedId}
                                 >
-                                    <span className="submissionPickerName">{fullName(s.student)}</span>
+                                    <span className="submissionPickerName">{fullName(s.learner)}</span>
                                     <span className="submissionPickerMeta">
                                         <span className={`submissionStatusDot ${s.status === 'submitted' ? 'submittedStatus' : 'gradedStatus'}`} />
                                         {s.status === 'graded'
@@ -185,7 +185,7 @@ export default function Grading() {
                             onGraded={applyGrade}
                         />
                     ) : (
-                        <EmptyState title="Pick a student" body="Choose a submission from the list to review it." />
+                        <EmptyState title="Pick a learner" body="Choose a submission from the list to review it." />
                     )}
                 </div>
             )}
@@ -218,15 +218,15 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
 
         let correctCount = 0;
         questions.forEach((q, idx) => {
-            const studentAns = Array.isArray(parsedAnswers)
+            const learnerAnswer = Array.isArray(parsedAnswers)
                 ? parsedAnswers[idx]
                 : parsedAnswers[idx] ?? parsedAnswers[q._id];
 
             const correctText = q.choices?.[Number(q.correctAnswer)];
             if (
-                studentAns != null &&
-                (String(studentAns) === String(q.correctAnswer) ||
-                    String(studentAns) === String(correctText))
+                learnerAnswer != null &&
+                (String(learnerAnswer) === String(q.correctAnswer) ||
+                    String(learnerAnswer) === String(correctText))
             ) {
                 correctCount += 1;
             }
@@ -262,7 +262,7 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
 
     return (
         <section className="gradingPanel">
-            <h2>{fullName(submission.student)}</h2>
+            <h2>{fullName(submission.learner)}</h2>
             <p className="gradingMeta">Turned in {formatDate(submission.submittedAt)}</p>
 
             {item?.description && (
@@ -298,7 +298,7 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
 
                     <ol className="quizQuestionList">
                         {item.questions.map((q, qIdx) => {
-                            const studentAns = Array.isArray(submission.answers) ? submission.answers[qIdx] : submission.answers?.[qIdx];
+                            const learnerAnswer = Array.isArray(submission.answers) ? submission.answers[qIdx] : submission.answers?.[qIdx];
                             return (
                                 <li key={qIdx} className="quizQuestionCard">
                                     <h3>{q.prompt}</h3>
@@ -308,7 +308,7 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
                                             <li key={cIdx}>
                                                 {choice}
                                                 {q.correctAnswer === cIdx && <strong> ✓ Correct</strong>}
-                                                {studentAns === cIdx && <strong> (Student Answer)</strong>}
+                                                {learnerAnswer === cIdx && <strong> (Learner Answer)</strong>}
                                             </li>
                                         ))}
                                     </ul>
@@ -359,7 +359,7 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
                         <label htmlFor="feedback">Feedback</label>
                         <textarea
                             id="feedback"
-                            placeholder="Add feedback for the student"
+                            placeholder="Add feedback for the learner"
                             rows={5}
                             maxLength={100}
                             value={feedback}
