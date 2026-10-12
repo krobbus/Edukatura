@@ -15,11 +15,11 @@ router.use(verifyToken);
 
 router.route('/')
     .get(getQuizzes)
-    .post(authorizeRoles('faculty', 'admin'), createQuiz);
+    .post(authorizeRoles('instructor', 'admin'), createQuiz);
 
 router.route('/:id')
     .get(getQuizById)
-    .put(authorizeRoles('faculty', 'admin'), updateQuiz)
-    .delete(authorizeRoles('faculty', 'admin'), deleteQuiz);
+    .put(authorizeRoles('instructor', 'admin'), updateQuiz)
+    .delete(authorizeRoles('instructor', 'admin'), deleteQuiz);
 
 export default router;

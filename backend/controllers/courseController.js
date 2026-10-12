@@ -3,41 +3,41 @@ import { Course, Enrollment } from '../models/index.js';
 import User from '../models/User.js';
 
 export const createCourse = asyncHandler(async (req, res) => {
-    const { courseCode, title, description, faculty } = req.body;
-    let facultyId = req.user._id;
+    const { courseCode, title, description, instructor } = req.body;
+    let instructorId = req.user._id;
 
     if (req.user.role === 'admin') {
-        if (!faculty) {
+        if (!instructor) {
             res.status(400);
-            throw new Error('A faculty member is required');
+            throw new Error('A instructor member is required');
         }
 
-        const selectedFaculty = await User.findOne({ _id: faculty, role: 'faculty' });
-        if (!selectedFaculty) {
+        const selectedInstructor = await User.findOne({ _id: instructor, role: 'instructor' });
+        if (!selectedInstructor) {
             res.status(400);
-            throw new Error('Selected faculty member was not found');
+            throw new Error('Selected instructor member was not found');
         }
 
-        facultyId = selectedFaculty._id;
+        instructorId = selectedInstructor._id;
     }
 
     const newCourse = await Course.create({
         courseCode,
         title,
         description,
-        faculty: facultyId
+        instructor: instructorId
     });
 
-    await newCourse.populate('faculty', 'firstName middleName lastName email');
+    await newCourse.populate('instructor', 'firstName middleName lastName email');
 
     res.status(201).json(newCourse);
 });
 
 export const getCourses = asyncHandler(async (req, res) => {
-    const courses = await Course.find().populate('faculty', 'firstName lastName email');
+    const courses = await Course.find().populate('instructor', 'firstName lastName email');
 
-    if (req.user.role === 'student') {
-        const enrollments = await Enrollment.find({ student: req.user._id }).select('course').lean();
+    if (req.user.role ===  'learner') {
+        const enrollments = await Enrollment.find({ learner: req.user._id }).select('course').lean();
         const enrolledCourseIds = new Set(enrollments.map((enrollment) => enrollment.course.toString()));
 
         return res.json(courses.map((course) => ({
@@ -50,7 +50,7 @@ export const getCourses = asyncHandler(async (req, res) => {
 });
 
 export const getCourseById = asyncHandler(async (req, res) => {
-    const foundCourse = await Course.findById(req.params.id).populate('faculty', 'firstName lastName email');
+    const foundCourse = await Course.findById(req.params.id).populate('instructor', 'firstName lastName email');
 
     if (!foundCourse) {
         res.status(404);

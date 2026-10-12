@@ -15,11 +15,11 @@ router.use(verifyToken);
 
 router.route('/')
     .get(getCourses)
-    .post(authorizeRoles('faculty', 'admin'), createCourse);
+    .post(authorizeRoles('instructor', 'admin'), createCourse);
 
 router.route('/:id')
     .get(getCourseById)
-    .put(authorizeRoles('faculty', 'admin'), updateCourse)
-    .delete(authorizeRoles('faculty', 'admin'), deleteCourse);
+    .put(authorizeRoles('instructor', 'admin'), updateCourse)
+    .delete(authorizeRoles('instructor', 'admin'), deleteCourse);
 
 export default router;

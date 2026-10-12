@@ -15,11 +15,11 @@ router.use(verifyToken);
 
 router.route('/')
     .get(getModules)
-    .post(authorizeRoles('faculty', 'admin'), createModule);
+    .post(authorizeRoles('instructor', 'admin'), createModule);
 
 router.route('/:id')
     .get(getModuleById)
-    .put(authorizeRoles('faculty', 'admin'), updateModule)
-    .delete(authorizeRoles('faculty', 'admin'), deleteModule);
+    .put(authorizeRoles('instructor', 'admin'), updateModule)
+    .delete(authorizeRoles('instructor', 'admin'), deleteModule);
 
 export default router;

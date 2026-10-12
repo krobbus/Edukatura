@@ -11,8 +11,8 @@ export const createSubmission = asyncHandler(async (req, res) => {
 
     const existing = await Submission.findOne(
         quiz
-            ? { quiz, student: req.user._id }
-            : { assignment, student: req.user._id }
+            ? { quiz, learner: req.user._id }
+            : { assignment, learner: req.user._id }
     );
     if (existing) {
         res.status(400);
@@ -21,7 +21,7 @@ export const createSubmission = asyncHandler(async (req, res) => {
 
     const submission = await Submission.create({
         ...(quiz ? { quiz, answers } : { assignment, submissionText, fileUrl }),
-        student: req.user._id,
+        learner: req.user._id,
         status: 'submitted',
         submittedAt: new Date(),
     });
@@ -30,7 +30,7 @@ export const createSubmission = asyncHandler(async (req, res) => {
 });
 
 export const getMySubmissions = asyncHandler(async (req, res) => {
-    const filter = { student: req.user._id };
+    const filter = { learner: req.user._id };
     if (req.query.quiz) filter.quiz = req.query.quiz;
     else if (req.query.assignment) filter.assignment = req.query.assignment;
 
@@ -49,7 +49,7 @@ export const getSubmissionsForCoursework = asyncHandler(async (req, res) => {
     }
 
     const filter = quiz ? { quiz } : { assignment };
-    const submissions = await Submission.find(filter).populate('student', 'firstName lastName email');
+    const submissions = await Submission.find(filter).populate('learner', 'firstName lastName email');
     res.json(submissions);
 });
 

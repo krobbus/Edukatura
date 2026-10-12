@@ -6,7 +6,7 @@ const enrollmentSchema = new mongoose.Schema({
         ref: 'Course',
         required: true,
     },
-    student: {
+    learner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -16,6 +16,6 @@ const enrollmentSchema = new mongoose.Schema({
         default: Date.now,
     },
 });
-enrollmentSchema.index({ course: 1, student: 1 }, { unique: true });
+enrollmentSchema.index({ course: 1, learner: 1 }, { unique: true });
 
 export default mongoose.model('Enrollment', enrollmentSchema);
