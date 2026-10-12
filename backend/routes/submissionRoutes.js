@@ -15,9 +15,9 @@ router.use(verifyToken);
 router.get('/my', getMySubmissions);
 
 router.route('/')
-    .get(authorizeRoles('faculty', 'admin'), getSubmissionsForCoursework)
+    .get(authorizeRoles('instructor', 'admin'), getSubmissionsForCoursework)
     .post(createSubmission);
 
-router.put('/:id/grade', authorizeRoles('faculty', 'admin'), gradeSubmission);
+router.put('/:id/grade', authorizeRoles('instructor', 'admin'), gradeSubmission);
 
 export default router;

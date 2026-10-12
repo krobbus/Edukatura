@@ -5,8 +5,8 @@ const userSchema = new mongoose.Schema(
     {
         role: {
             type: String,
-            enum: ['student', 'faculty', 'admin'],
-            default: 'student',
+            enum: ['learner', 'instructor', 'admin'],
+            default: 'learner',
             required: true,
         },
         email: {

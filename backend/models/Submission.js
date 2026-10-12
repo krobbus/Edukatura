@@ -12,7 +12,7 @@ const submissionSchema = new mongoose.Schema(
             ref: 'Quiz',
             required: function () { return !this.assignment; },
         },
-        student: {
+        learner: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
@@ -52,12 +52,12 @@ const submissionSchema = new mongoose.Schema(
 );
 
 submissionSchema.index(
-    { assignment: 1, student: 1 },
+    { assignment: 1, learner: 1 },
     { unique: true, partialFilterExpression: { assignment: { $type: 'objectId' } } }
 );
 
 submissionSchema.index(
-    { quiz: 1, student: 1 },
+    { quiz: 1, learner: 1 },
     { unique: true, partialFilterExpression: { quiz: { $type: 'objectId' } } }
 );
 

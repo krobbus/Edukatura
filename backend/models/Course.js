@@ -21,7 +21,7 @@ const courseSchema = new mongoose.Schema(
             type: String,
             set: capitalizeFirstLetter,
         },
-        faculty: {
+        instructor: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,

@@ -15,11 +15,11 @@ router.use(verifyToken);
 
 router.route('/')
     .get(getAssignments)
-    .post(authorizeRoles('faculty', 'admin'), createAssignment);
+    .post(authorizeRoles('instructor', 'admin'), createAssignment);
 
 router.route('/:id')
     .get(getAssignmentById)
-    .put(authorizeRoles('faculty', 'admin'), updateAssignment)
-    .delete(authorizeRoles('faculty', 'admin'), deleteAssignment);
+    .put(authorizeRoles('instructor', 'admin'), updateAssignment)
+    .delete(authorizeRoles('instructor', 'admin'), deleteAssignment);
 
 export default router;

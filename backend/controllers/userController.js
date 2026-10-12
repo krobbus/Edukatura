@@ -8,7 +8,7 @@ export const getUsers = asyncHandler(async (req, res) => {
 
 export const updateUserRole = asyncHandler(async (req, res) => {
     const { role } = req.body;
-    if (!['student', 'faculty', 'admin'].includes(role)) {
+    if (!['learner', 'instructor', 'admin'].includes(role)) {
         res.status(400);
         throw new Error('Invalid role');
     }
@@ -30,7 +30,7 @@ export const updateUserRole = asyncHandler(async (req, res) => {
 export const updateUser = asyncHandler(async (req, res) => {
     const { firstName, middleName, lastName, email, role, createdAt } = req.body;
 
-    if (!['student', 'faculty', 'admin'].includes(role)) {
+    if (!['learner', 'instructor', 'admin'].includes(role)) {
         res.status(400);
         throw new Error('Invalid role');
     }

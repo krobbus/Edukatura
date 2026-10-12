@@ -4,18 +4,18 @@ import { Enrollment } from '../models/index.js';
 export const createEnrollment = asyncHandler(async (req, res) => {
     const courseId = req.body.course ?? req.body.courseId;
 
-    const existing = await Enrollment.findOne({ course: courseId, student: req.user._id });
+    const existing = await Enrollment.findOne({ course: courseId, learner: req.user._id });
     if (existing) {
         res.status(400);
         throw new Error('Already enrolled in this course');
     }
 
-    const enrollment = await Enrollment.create({ course: courseId, student: req.user._id });
+    const enrollment = await Enrollment.create({ course: courseId, learner: req.user._id });
     res.status(201).json(enrollment);
 });
 
 export const getMyEnrollments = asyncHandler(async (req, res) => {
-    const enrollments = await Enrollment.find({ student: req.user._id }).populate('course', 'courseCode title description');
+    const enrollments = await Enrollment.find({ learner: req.user._id }).populate('course', 'courseCode title description');
     res.json(enrollments);
 });
 
@@ -25,7 +25,7 @@ export const getEnrollmentsForCourse = asyncHandler(async (req, res) => {
         throw new Error('course query param is required');
     }
 
-    const enrollments = await Enrollment.find({ course: req.query.course }).populate('student', 'firstName lastName email');
+    const enrollments = await Enrollment.find({ course: req.query.course }).populate('learner', 'firstName lastName email');
     res.json(enrollments);
 });
 
@@ -36,8 +36,8 @@ export const deleteEnrollment = asyncHandler(async (req, res) => {
         throw new Error('Enrollment not found');
     }
 
-    const isOwner = enrollment.student.toString() === req.user._id.toString();
-    const isStaff = ['faculty', 'admin'].includes(req.user.role);
+    const isOwner = enrollment.learner.toString() === req.user._id.toString();
+    const isStaff = ['instructor', 'admin'].includes(req.user.role);
     if (!isOwner && !isStaff) {
         res.status(403);
         throw new Error('Not authorized to remove this enrollment');
