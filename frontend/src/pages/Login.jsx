@@ -112,7 +112,7 @@ export default function Login() {
                         </div>
 
                         <button
-                            className="inline-flex w-full items-center justify-center rounded-xl bg-[var(--main)] px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(42,107,92,0.3)] transition hover:-translate-y-0.5 hover:bg-[var(--secondary)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="inline-flex w-full items-center justify-center rounded-xl bg-[var(--main)] px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(42,107,92,0.3)] transition hover:-translate-y-0.5 hover:bg-[var(--secondary)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                             type="submit"
                             disabled={busy}
                         >

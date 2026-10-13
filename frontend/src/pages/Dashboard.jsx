@@ -198,173 +198,123 @@ export default function Dashboard() {
                     </div>
                 </div>
             </section>
-
-            <section className="flex flex-col gap-4">
-                <div className="flex items-end justify-between gap-4">
-                    <h2 className="font-[family-name:var(--headings)] text-2xl font-bold tracking-[-0.02em] text-[var(--secondary)]">
-                        {canTeach ? 'Your courses' : 'Enrolled courses'}
-                    </h2>
-                    {courses.length > 0 && (
-                        <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
-                            View all →
-                        </Link>
-                    )}
-                </div>
-
-                {courses.length === 0 ? (
-                    <EmptyState
-                        title={canTeach ? 'No courses yet' : 'You are not enrolled in anything yet'}
-                        body={
-                            canTeach
-                                ? 'Create a course to start adding modules and assignments.'
-                                : 'Browse the catalogue and enroll with a course code from your instructor.'
-                        }
-                        action={
-                            <Link className="font-semibold text-[var(--main)] hover:underline" to="/courses">
-                                {canTeach ? 'Create a course' : 'Browse courses'}
+            
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[3fr_2fr]">
+                <section className="flex min-w-0 flex-col gap-4">
+                    <div className="flex items-end justify-between gap-4">
+                        <h2 className="font-[family-name:var(--headings)] text-2xl font-bold tracking-[-0.02em] text-[var(--secondary)]">
+                            {canTeach ? 'Your courses' : 'Enrolled courses'}
+                        </h2>
+                        
+                        {courses.length > 0 && (
+                            <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                                View all →
                             </Link>
-                        }
-                    />
-                ) : (
-                    <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {courses.map((c) => (
-                            <li key={c._id} style={{ '--spine': spineColor(c.courseCode) }}>
-                                <Link
-                                    className="group relative flex h-full flex-col gap-3 overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5 shadow-sm transition hover:-translate-y-1 hover:border-[var(--main)]/40 hover:shadow-lg"
-                                    to={`/courses/${c._id}`}
-                                >
-                                    <span className="absolute inset-x-0 top-0 h-1.5 bg-[var(--spine)]" aria-hidden="true" />
+                        )}
+                    </div>
 
-                                    <div className="mt-1 flex items-center justify-between gap-3">
-                                        <span className="grid size-11 place-items-center rounded-xl bg-[var(--spine)] text-sm font-bold uppercase text-white shadow-sm">
-                                            {(c.courseCode ?? c.title ?? '?').slice(0, 2)}
-                                        </span>
-                                        <span className="rounded-full bg-[var(--highlight)]/50 px-2.5 py-1 text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">
-                                            {c.courseCode}
-                                        </span>
-                                    </div>
-
-                                    <div className="flex flex-col gap-1">
-                                        <span className="font-[family-name:var(--headings)] text-lg font-semibold leading-snug text-[var(--secondary)] transition group-hover:text-[var(--main)]">
-                                            {c.title}
-                                        </span>
-                                        {c.description && (
-                                            <span className="line-clamp-2 text-sm leading-relaxed text-[var(--muted)]">{c.description}</span>
-                                        )}
-                                    </div>
-
-                                    <span className="mt-auto pt-1 text-xs font-semibold text-[var(--main)]">Open course →</span>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </section>
-
-            <div className={`grid grid-cols-1 gap-8 ${canTeach ? '' : 'lg:grid-cols-[3fr_2fr]'}`}>
-                <section className="flex flex-col gap-4">
-                    <h2 className="font-[family-name:var(--headings)] text-2xl font-bold tracking-[-0.02em] text-[var(--secondary)]">
-                        {canTeach ? 'Your courseworks' : 'Coming up'}
-                    </h2>
-
-                    {soon.length === 0 ? (
+                    {courses.length === 0 ? (
                         <EmptyState
-                            title="Nothing due"
-                            body={canTeach ? 'Assignments and quizzes you post will appear here.' : 'You are all caught up.'}
+                            title={canTeach ? 'No courses yet' : 'You are not enrolled in anything yet'}
+                            body={
+                                canTeach
+                                    ? 'Create a course to start adding modules and assignments.'
+                                    : 'Browse the catalogue and enroll with a course code from your instructor.'
+                            }
+                            action={
+                                <Link className="font-semibold text-[var(--main)] hover:underline" to="/courses">
+                                    {canTeach ? 'Create a course' : 'Browse courses'}
+                                </Link>
+                            }
                         />
                     ) : (
-                        <ul className="flex flex-col gap-3">
-                            {soon.map((item) => {
-                                const meta = dueMeta(item.dueDate);
-                                const courseId = typeof item.course === 'object' ? item.course?._id : item.course;
-                                const itemType = item.kind === 'quiz' ? 'quizzes' : 'assignments';
-                                const path = courseId
-                                    ? `/courses/${courseId}/${itemType}/${item._id}`
-                                    : `/${itemType}/${item._id}`;
-                                const pending = canTeach ? needsGrading[`${item.kind}-${item._id}`] : 0;
+                        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            {courses.map((c) => (
+                                <li key={c._id} style={{ '--spine': spineColor(c.courseCode) }}>
+                                    <Link
+                                        className="group relative flex h-full flex-col gap-3 overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5 shadow-sm transition hover:-translate-y-1 hover:border-[var(--main)]/40 hover:shadow-lg"
+                                        to={`/courses/${c._id}`}
+                                    >
+                                        <span className="absolute inset-x-0 top-0 h-1.5 bg-[var(--spine)]" aria-hidden="true" />
 
-                                return (
-                                    <li key={`${item.kind}-${item._id}`}>
-                                        <Link
-                                            className="group flex items-center gap-4 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4 shadow-sm transition hover:border-[var(--main)]/50 hover:shadow-md"
-                                            to={path}
-                                        >
-                                            <span
-                                                className={`grid size-11 shrink-0 place-items-center rounded-xl text-sm font-bold ${item.kind === 'quiz' ? 'bg-[var(--secondary)]/10 text-[var(--secondary)]' : 'bg-[var(--main)]/10 text-[var(--main)]'}`}
-                                                title={item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
-                                            >
-                                                {item.kind === 'quiz' ? 'Q' : 'A'}
+                                        <div className="mt-1 flex items-center justify-between gap-3">
+                                            <span className="grid size-11 place-items-center rounded-xl bg-[var(--spine)] text-sm font-bold uppercase text-white shadow-sm">
+                                                {(c.courseCode ?? c.title ?? '?').slice(0, 2)}
                                             </span>
+                                            <span className="rounded-full bg-[var(--highlight)]/50 px-2.5 py-1 text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">
+                                                {c.courseCode}
+                                            </span>
+                                        </div>
 
-                                            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                                                <span className="text-xs font-bold uppercase tracking-widest text-[var(--main)]">
-                                                    {item.course?.courseCode ?? item.course?.title ?? ''}
-                                                    <span className="ml-2 font-medium normal-case tracking-normal text-[var(--muted)]">
-                                                        · {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
-                                                    </span>
-                                                </span>
-                                                <span className="truncate font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item.title}</span>
-                                                {pending > 0 && (
-                                                    <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--warning)]/15 px-2.5 py-0.5 text-xs font-semibold text-[var(--warning)]">
-                                                        <span className="size-1.5 rounded-full bg-[var(--warning)]" aria-hidden="true" />
-                                                        {pending} learner needs to be graded
-                                                    </span>
-                                                )}
+                                        <div className="flex flex-col gap-1">
+                                            <span className="font-[family-name:var(--headings)] text-lg font-semibold leading-snug text-[var(--secondary)] transition group-hover:text-[var(--main)]">
+                                                {c.title}
                                             </span>
+                                            {c.description && (
+                                                <span className="line-clamp-2 text-sm leading-relaxed text-[var(--muted)]">{c.description}</span>
+                                            )}
+                                        </div>
 
-                                            <span className={`shrink-0 rounded-full bg-[var(--highlight)]/50 px-3 py-1 text-xs font-semibold text-[var(--secondary)] ${meta.className ?? ''}`}>
-                                                {meta.label}
-                                            </span>
-                                        </Link>
-                                    </li>
-                                );
-                            })}
+                                        <span className="mt-auto pt-1 text-xs font-semibold text-[var(--main)]">Open course →</span>
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     )}
                 </section>
 
-                {!canTeach && (
+                <div className="order-first flex min-w-0 flex-col gap-8 lg:order-none bg-[var(--main)]/20 rounded-lg px-6 py-8">
                     <section className="flex flex-col gap-4">
                         <h2 className="font-[family-name:var(--headings)] text-2xl font-bold tracking-[-0.02em] text-[var(--secondary)]">
-                            Completed
+                            {canTeach ? 'Your courseworks' : 'Due Soon'}
                         </h2>
 
-                        {completed.length === 0 ? (
+                        {soon.length === 0 ? (
                             <EmptyState
-                                title="No completed work yet"
-                                body="Submitted assignments and quizzes will appear here."
+                                title="Nothing due"
+                                body={canTeach ? 'Assignments and quizzes you post will appear here.' : 'You are all caught up.'}
                             />
                         ) : (
                             <ul className="flex flex-col gap-3">
-                                {completed.map((item) => {
+                                {soon.map((item) => {
+                                    const meta = dueMeta(item.dueDate);
                                     const courseId = typeof item.course === 'object' ? item.course?._id : item.course;
                                     const itemType = item.kind === 'quiz' ? 'quizzes' : 'assignments';
                                     const path = courseId
                                         ? `/courses/${courseId}/${itemType}/${item._id}`
                                         : `/${itemType}/${item._id}`;
+                                    const pending = canTeach ? needsGrading[`${item.kind}-${item._id}`] : 0;
 
                                     return (
-                                        <li key={`completed-${item.kind}-${item._id}`}>
+                                        <li key={`${item.kind}-${item._id}`}>
                                             <Link
-                                                className="group flex items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4 shadow-sm transition hover:border-[var(--main)]/50 hover:shadow-md"
+                                                className="group flex items-center gap-4 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4 shadow-sm transition hover:border-[var(--main)]/50 hover:shadow-md"
                                                 to={path}
                                             >
-                                                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--main)]/10 text-[var(--main)]">
-                                                    <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                                <span
+                                                    className="grid size-11 shrink-0 place-items-center rounded-xl text-sm font-bold bg-[var(--main)]/10 text-[var(--main)]"
+                                                    title={item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
+                                                >
+                                                    {item.kind === 'quiz' ? 'Q' : 'A'}
                                                 </span>
 
-                                                <span className="flex min-w-0 flex-1 flex-col">
-                                                    <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item.title}</span>
+                                                <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                                                    <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item?.title}</span>
                                                     <span className="text-xs text-[var(--muted)]">
-                                                        {item.course?.courseCode ?? item.course?.title ?? ''} · {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
+                                                        {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
                                                     </span>
+                                                    
+                                                    {pending > 0 && (
+                                                        <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--warning)]/15 px-2.5 py-0.5 text-xs font-semibold text-[var(--warning)]">
+                                                            <span className="size-1.5 rounded-full bg-[var(--warning)]" aria-hidden="true" />
+                                                            {pending} learner needs to be graded
+                                                        </span>
+                                                    )}
                                                 </span>
 
-                                                {gradedIds.has(item._id) ? (
-                                                    <span className="shrink-0 rounded-full bg-[var(--main)] px-2.5 py-1 text-xs font-semibold text-white">Graded</span>
-                                                ) : (
-                                                    <span className="shrink-0 rounded-full bg-[var(--warning)]/15 px-2.5 py-1 text-xs font-semibold text-[var(--warning)]">Pending grade</span>
-                                                )}
+                                                <span className={`shrink-0 rounded-full bg-[var(--highlight)]/50 px-3 py-1 text-xs font-semibold text-[var(--secondary)] ${meta.className ?? ''}`}>
+                                                    {meta.label}
+                                                </span>
                                             </Link>
                                         </li>
                                     );
@@ -372,7 +322,58 @@ export default function Dashboard() {
                             </ul>
                         )}
                     </section>
-                )}
+
+                    {!canTeach && (
+                        <section className="flex flex-col gap-4">
+                            <h2 className="font-[family-name:var(--headings)] text-2xl font-bold tracking-[-0.02em] text-[var(--secondary)]">
+                                Completed
+                            </h2>
+
+                            {completed.length === 0 ? (
+                                <EmptyState
+                                    title="No completed work yet"
+                                    body="Submitted assignments and quizzes will appear here."
+                                />
+                            ) : (
+                                <ul className="flex flex-col gap-3">
+                                    {completed.map((item) => {
+                                        const courseId = typeof item.course === 'object' ? item.course?._id : item.course;
+                                        const itemType = item.kind === 'quiz' ? 'quizzes' : 'assignments';
+                                        const path = courseId
+                                            ? `/courses/${courseId}/${itemType}/${item._id}`
+                                            : `/${itemType}/${item._id}`;
+
+                                        return (
+                                            <li key={`completed-${item.kind}-${item._id}`}>
+                                                <Link
+                                                    className="group flex items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4 shadow-sm transition hover:border-[var(--main)]/50 hover:shadow-md"
+                                                    to={path}
+                                                >
+                                                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--main)]/10 text-[var(--main)]">
+                                                        <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                                    </span>
+
+                                                    <span className="flex min-w-0 flex-1 flex-col">
+                                                        <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item.title}</span>
+                                                        <span className="text-xs text-[var(--muted)]">
+                                                            {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
+                                                        </span>
+                                                    </span>
+
+                                                    {gradedIds.has(item._id) ? (
+                                                        <span className="shrink-0 rounded-full bg-[var(--main)] px-2.5 py-1 text-xs font-semibold text-white">Graded</span>
+                                                    ) : (
+                                                        <span className="shrink-0 rounded-full bg-[var(--warning)]/15 px-2.5 py-1 text-xs font-semibold text-[var(--warning)]">Pending grade</span>
+                                                    )}
+                                                </Link>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            )}
+                        </section>
+                    )}
+                </div>
             </div>
         </div>
     );

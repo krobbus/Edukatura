@@ -97,11 +97,31 @@ export default function AssignmentForm() {
 
     return (
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-8">
-            <p>
-                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${courseId}`}>
-                    ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
-                </Link>
-            </p>
+            {course ? (
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${course._id}`}>
+                        {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
+                    </Link>
+                </div>
+            ) : (
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                </div>
+            )}
 
             {isEditing &&
                 <div className="rounded-xl border border-[var(--line)] border-l-4 border-l-[var(--main)] bg-[var(--panel)] p-5 shadow-sm">
@@ -149,7 +169,7 @@ export default function AssignmentForm() {
                     <div className="flex flex-col gap-1.5 sm:col-span-2">
                         <label className="text-sm font-semibold text-[var(--secondary)]" htmlFor="a-desc">Instructions <span className="requiredMarker" aria-hidden="true">*</span></label>
                         <textarea
-                            className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)]"
+                            className="w-full resize-y rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-sm text-[var(--shadow)] placeholder:text-[var(--muted)] focus:border-[var(--main)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(42,107,92,0.2)] z-index"
                             id="a-desc" name="description" placeholder="Explain what learners need to do" rows={5} value={form.description} onChange={change} required
                         />
                     </div>
