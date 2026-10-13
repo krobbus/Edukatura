@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router';
 
-import './styles/base.css';
+import './style/base.css';
 
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
