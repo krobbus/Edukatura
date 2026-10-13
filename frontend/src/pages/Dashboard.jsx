@@ -299,11 +299,9 @@ export default function Dashboard() {
                                                 </span>
 
                                                 <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                                                    <span className="flex min-w-0 flex-1 flex-col gap-0.5 text-xs font-bold uppercase tracking-widest text-[var(--main)]">
-                                                        <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item?.title}</span>
-                                                        <span className="font-medium normal-case tracking-normal text-[var(--muted)]">
-                                                            {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
-                                                        </span>
+                                                    <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item?.title}</span>
+                                                    <span className="text-xs text-[var(--muted)]">
+                                                        {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
                                                     </span>
                                                     
                                                     {pending > 0 && (
