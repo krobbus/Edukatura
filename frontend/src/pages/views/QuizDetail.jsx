@@ -122,15 +122,29 @@ export default function QuizDetail() {
     return (
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 pb-12">
             {course && typeof course === 'object' ? (
-                <Link className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${course._id}`}>
-                    <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
-                    {course.courseCode} · {course.title}
-                </Link>
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${course._id}`}>
+                        {course.courseCode} · {course.title}
+                    </Link>
+                </div>
             ) : (
-                <Link className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
-                    <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
-                    All courses
-                </Link>
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                </div>
             )}
 
             <header className="overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--panel)] shadow-sm">
@@ -157,7 +171,7 @@ export default function QuizDetail() {
                                 </Link>
 
                                 <button
-                                    className="inline-flex items-center rounded-lg border border-[var(--danger)] px-3.5 py-2 text-xs font-semibold text-[var(--danger)] transition hover:bg-[var(--danger)] hover:text-white"
+                                    className="inline-flex items-center rounded-lg border border-[var(--danger)] px-3.5 py-2 text-xs font-semibold text-[var(--danger)] transition hover:bg-[var(--danger)] hover:text-white cursor-pointer"
                                     type="button"
                                     onClick={deleteQuiz}
                                     aria-label={`Delete quiz ${quiz.title}`}

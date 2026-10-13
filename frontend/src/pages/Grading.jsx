@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { dueMeta, formatDate, fullName } from '../utils';
+import { dueMeta, formatDate, fullName, capitalizeFirstLetter } from '../utils';
 import Loading from '../components/Loading';
 import ErrorNote from '../components/ErrorNote';
 import EmptyState from '../components/EmptyState';
@@ -113,11 +113,35 @@ export default function Grading() {
 
     return (
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 py-8">
-            <p>
-                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${activeCourseId}/${courseworkType}/${itemId}`}>
-                    ⟵ {item.title}
-                </Link>
-            </p>
+            {course ? (
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${course._id}`}>
+                        {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${activeCourseId}/${courseworkType}/${itemId}`}>
+                        {item?.title ? item.title : `Back to ${courseworkType === 'quizzes' ? "Quiz" : "Assignment"}`}
+                    </Link>
+                </div>
+            ) : (
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                </div>
+            )}
 
             <header className="relative flex flex-col gap-2 rounded-xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm">
                 {canTeach && (
@@ -132,7 +156,7 @@ export default function Grading() {
                         </Link>
 
                         <button
-                            className="inline-flex items-center rounded-lg border border-[var(--danger)] px-3 py-1.5 text-xs font-semibold text-[var(--danger)] transition hover:bg-[var(--danger)] hover:text-white"
+                            className="inline-flex items-center rounded-lg border border-[var(--danger)] px-3 py-1.5 text-xs font-semibold text-[var(--danger)] transition hover:bg-[var(--danger)] hover:text-white cursor-pointer"
                             type="button"
                             onClick={deleteItem}
                             aria-label={`Delete ${isQuiz ? 'quiz' : 'assignment'} ${item.title}`}
@@ -159,9 +183,9 @@ export default function Grading() {
                             <li key={s._id}>
                                 <button
                                     type="button"
-                                    className={`flex w-full flex-col gap-1 rounded-lg border px-3 py-2.5 text-left transition ${
+                                    className={`flex w-full flex-col gap-1 rounded-lg border px-3 py-2.5 text-left cursor-pointer transition ${
                                         s._id === selectedId
-                                            ? 'border-[var(--main)] bg-[var(--main)]/10'
+                                            ? 'border-[var(--main)] bg-[var(--main)]/20'
                                             : 'border-[var(--line)] bg-[var(--panel)] hover:border-[var(--main)]'
                                     }`}
                                     onClick={() => setSelectedId(s._id)}
@@ -299,7 +323,7 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
                 <div className="flex flex-col gap-3">
                     <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Quiz Responses</h3>
                     <button
-                        className="self-start rounded-lg border border-[var(--main)] px-3 py-1.5 text-xs font-semibold text-[var(--main)] transition hover:bg-[var(--main)] hover:text-white"
+                        className="self-start rounded-lg border border-[var(--main)] px-3 py-1.5 text-xs font-semibold text-[var(--main)] transition hover:bg-[var(--main)] hover:text-white cursor-pointer"
                         type="button"
                         onClick={handleAutoGradeQuiz}
                     >
@@ -385,7 +409,7 @@ function GradePanel({ item, submission, maxPoints, isQuiz, onGraded }) {
 
                 <div className="flex items-center gap-3">
                     <button
-                        className="inline-flex items-center justify-center rounded-lg bg-[var(--main)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+                        className="inline-flex items-center justify-center rounded-lg bg-[var(--main)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--secondary)] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                         disabled={busy}
                     >
                         {busy ? 'Saving…' : submission.status === 'graded' ? 'Update grade' : 'Save grade'}

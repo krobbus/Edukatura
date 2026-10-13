@@ -15,6 +15,7 @@ export default function CourseDetail() {
 
     const [tab, setTab] = useState('work');
     const [roster, setRoster] = useState([]);
+    const [enrolled, setEnrolled] = useState(false);
     const [course, setCourse] = useState(null);
     const [modules, setModules] = useState([]);
     const [assignments, setAssignments] = useState([]);
@@ -23,21 +24,37 @@ export default function CourseDetail() {
 
     const load = useCallback(() => {
         setState({ loading: true, error: null });
-        const calls = [
+        Promise.all([
             api.get(`/courses/${courseId}`),
-            api.get(`/modules?course=${courseId}`),
-            api.get(`/assignments?course=${courseId}`),
-            api.get(`/quizzes?course=${courseId}`),
-        ];
-        if (canTeach) calls.push(api.get(`/enrollments?course=${courseId}`));
+            api.get(canTeach ? `/enrollments?course=${courseId}` : '/enrollments/my'),
+        ])
+            .then(async ([courseResponse, enrollmentResponse]) => {
+                const courseData = courseResponse.course ?? courseResponse;
+                const enrollments = enrollmentResponse?.enrollments ?? enrollmentResponse ?? [];
 
-        Promise.all(calls)
-            .then(([courseResponse, moduleResponse, assignmentResponse, quizResponse, enrollmentResponse]) => {
-                setCourse(courseResponse.course ?? courseResponse);
-                setModules(moduleResponse.modules ?? moduleResponse ?? []);
-                setAssignments(assignmentResponse.assignments ?? assignmentResponse ?? []);
-                setQuizzes(quizResponse.quizzes ?? quizResponse ?? []);
-                setRoster(enrollmentResponse ? enrollmentResponse.enrollments ?? enrollmentResponse ?? [] : []);
+                const isEnrolled = canTeach
+                    || courseData.isEnrolled === true
+                    || (Array.isArray(enrollments) && enrollments.some((e) => String(e.course?._id ?? e.course) === String(courseId)));
+
+                setCourse(courseData);
+                setEnrolled(isEnrolled);
+                setRoster(canTeach && Array.isArray(enrollments) ? enrollments : []);
+
+                if (isEnrolled) {
+                    const [moduleResponse, assignmentResponse, quizResponse] = await Promise.all([
+                        api.get(`/modules?course=${courseId}`),
+                        api.get(`/assignments?course=${courseId}`),
+                        api.get(`/quizzes?course=${courseId}`),
+                    ]);
+                    setModules(moduleResponse.modules ?? moduleResponse ?? []);
+                    setAssignments(assignmentResponse.assignments ?? assignmentResponse ?? []);
+                    setQuizzes(quizResponse.quizzes ?? quizResponse ?? []);
+                } else {
+                    setModules([]);
+                    setAssignments([]);
+                    setQuizzes([]);
+                }
+
                 setState({ loading: false, error: null });
             })
             .catch((error) => setState({ loading: false, error }));
@@ -48,6 +65,8 @@ export default function CourseDetail() {
     if (state.loading) return <Loading label="Loading course" />;
     if (state.error) return <ErrorNote error={state.error} onRetry={load} />;
     if (!course) return null;
+
+    const hasAccess = canTeach || enrolled;
 
     const byModule = (moduleId) => assignments.filter((assignment) => (assignment.module?._id ?? assignment.module) === moduleId);
     const looseAssignments = assignments.filter((assignment) => !assignment.module);
@@ -97,10 +116,15 @@ export default function CourseDetail() {
 
     return (
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 pb-12">
-            <Link className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
-                <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
-                All courses
-            </Link>
+            <div className="inline-flex w-fit items-center gap-1.5">
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                    Dashboard
+                </Link>
+                <span className="text-sm font-semibold text-[var(--main)] select-none">/</span>
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                    My courses
+                </Link>
+            </div>
 
             <header
                 className="overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--panel)] shadow-sm"
@@ -151,14 +175,16 @@ export default function CourseDetail() {
 
                     {course.description && <p className="max-w-3xl whitespace-pre-line text-sm leading-relaxed text-[var(--muted)]">{course.description}</p>}
 
-                    <ul className="flex flex-wrap gap-2 border-t border-[var(--line)] pt-5 text-xs font-semibold text-[var(--secondary)]">
-                        <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{modules.length} {modules.length === 1 ? 'module' : 'modules'}</li>
-                        <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{assignments.length} {assignments.length === 1 ? 'assignment' : 'assignments'}</li>
-                        <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{quizzes.length} {quizzes.length === 1 ? 'quiz' : 'quizzes'}</li>
-                        {canTeach && (
-                            <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{roster.length} {roster.length === 1 ? 'learner' : 'learners'}</li>
-                        )}
-                    </ul>
+                    {hasAccess && (
+                        <ul className="flex flex-wrap gap-2 border-t border-[var(--line)] pt-5 text-xs font-semibold text-[var(--secondary)]">
+                            <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{modules.length} {modules.length === 1 ? 'module' : 'modules'}</li>
+                            <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{assignments.length} {assignments.length === 1 ? 'assignment' : 'assignments'}</li>
+                            <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{quizzes.length} {quizzes.length === 1 ? 'quiz' : 'quizzes'}</li>
+                            {canTeach && (
+                                <li className="rounded-full bg-[var(--highlight)]/50 px-3 py-1.5">{roster.length} {roster.length === 1 ? 'learner' : 'learners'}</li>
+                            )}
+                        </ul>
+                    )}
                 </div>
             </header>
             
@@ -203,7 +229,7 @@ export default function CourseDetail() {
                             </Link>
 
                             <Link
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--secondary)] bg-white px-4 py-2 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--secondary)] hover:text-white"
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--main)] bg-white px-4 py-2 text-sm font-semibold text-[var(--main)] transition hover:bg-[var(--main)] hover:text-white"
                                 to={`/courses/${courseId}/quizzes/new`}
                             >
                                 <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
@@ -212,13 +238,13 @@ export default function CourseDetail() {
                         </div>
                     )}
                 </div>
-            ) : (
+            ) : hasAccess ? (
                 <h1 className="font-[family-name:var(--headings)] text-2xl font-bold tracking-[-0.02em] text-[var(--secondary)]">
                     Modules & Courseworks
                 </h1>
-            )}
+            ) : null}
 
-            {tab === 'users' ? <Roster roster={roster} /> : (
+            {!hasAccess ? null : tab === 'users' ? <Roster roster={roster} /> : (
                 modules.length === 0 && assignments.length === 0 && quizzes.length === 0 ? (
                     <EmptyState
                         title="No coursework yet"
@@ -413,7 +439,7 @@ function ModuleBlock({
                                 className="group flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-white px-4 py-3 transition hover:border-[var(--secondary)]/50 hover:shadow-sm"
                             >
                                 <Link className="flex min-w-0 flex-1 items-center gap-3" to={`/courses/${courseId}/quizzes/${quiz._id}`}>
-                                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[var(--secondary)]/10 text-sm font-bold text-[var(--secondary)]" title="Quiz">Q</span>
+                                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[var(--main)]/10 text-sm font-bold text-[var(--main)]" title="Quiz">Q</span>
                                     <span className="flex min-w-0 flex-col">
                                         <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--secondary)]">{quiz.title}</span>
                                         <span className={`text-xs font-medium text-[var(--muted)] ${meta.className ?? ''}`}>Quiz · {meta.label}</span>
