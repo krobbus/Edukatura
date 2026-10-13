@@ -115,13 +115,13 @@ export default function Register() {
                                 <label className="flex cursor-pointer flex-col gap-0.5 rounded-xl border border-[var(--line)] px-4 py-3 transition hover:bg-[var(--main)]/50 has-[:checked]:bg-[var(--main)]/80 has-[:checked]:border-[var(--main)] has-[:checked]:shadow-[0_0_0_3px_rgba(42,107,92,0.15)]">
                                     <input className="peer sr-only" type="radio" name="role" value="learner" checked={form.role === 'learner'} onChange={change} />
                                     <span className="text-sm font-semibold text-[var(--shadow)] peer-checked:text-[var(--panel)]">Learner</span>           
-                                    <span className="text-xs text-muted peer-checked:text-[var(--highlight)]">Enroll and take courses</span>
+                                    <span className="text-xs text-muted peer-checked:text-[var(--page-bg)]">Enroll and take courses</span>
                                 </label>
 
                                 <label className="flex cursor-pointer flex-col gap-0.5 rounded-xl border border-[var(--line)] px-4 py-3 transition hover:bg-[var(--main)]/50 has-[:checked]:bg-[var(--main)]/80 has-[:checked]:border-[var(--main)] has-[:checked]:shadow-[0_0_0_3px_rgba(42,107,92,0.15)]">
                                     <input className="peer sr-only" type="radio" name="role" value="instructor" checked={form.role === 'instructor'} onChange={change} />
                                     <span className="text-sm font-semibold text-[var(--shadow)] peer-checked:text-[var(--panel)]">Instructor</span>
-                                    <span className="text-xs text-muted peer-checked:text-[var(--highlight)]">Create and grade courses</span>
+                                    <span className="text-xs text-muted peer-checked:text-[var(--page-bg)]">Create and grade courses</span>
                                 </label>
                             </div>
                         </fieldset>
