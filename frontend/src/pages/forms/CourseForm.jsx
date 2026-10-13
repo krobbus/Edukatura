@@ -80,9 +80,15 @@ export default function CreateCourseForm() {
 
     return (
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-8">
-            <p>
-                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">⟵ All courses</Link>
-            </p>
+            <div className="inline-flex w-fit items-center gap-1.5">
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                    Dashboard
+                </Link>
+                <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                    My courses
+                </Link>
+            </div>
 
             {isEditing &&
                 <div

@@ -163,11 +163,31 @@ export default function QuizForm() {
 
     return (
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-8">
-            <p>
-                <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${courseId}`}>
-                    ⟵ {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
-                </Link>
-            </p>
+            {course ? (
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to={`/courses/${course._id}`}>
+                        {course?.courseCode ? `${course.courseCode} · ${course.title}` : 'Back to course'}
+                    </Link>
+                </div>
+            ) : (
+                <div className="inline-flex w-fit items-center gap-1.5">
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/dashboard">
+                        Dashboard
+                    </Link>
+                    <span className="text-sm font-bold text-[var(--main)] select-none">/</span>
+                    <Link className="text-sm font-semibold text-[var(--main)] hover:underline" to="/courses">
+                        My courses
+                    </Link>
+                </div>
+            )}
 
             {isEditing &&
                 <div className="rounded-xl border border-[var(--line)] border-l-4 border-l-[var(--secondary)] bg-[var(--panel)] p-5 shadow-sm">
