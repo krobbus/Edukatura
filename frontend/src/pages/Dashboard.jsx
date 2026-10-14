@@ -199,8 +199,8 @@ export default function Dashboard() {
                 </div>
             </section>
             
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[3fr_2fr]">
-                <section className="flex min-w-0 flex-col gap-4">
+            <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[3fr_2fr]">
+                <section className="flex min-w-0 flex-col gap-4 bg-[var(--main)]/20 rounded-lg px-6 py-8">
                     <div className="flex items-end justify-between gap-4">
                         <h2 className="font-[family-name:var(--headings)] text-2xl font-bold tracking-[-0.02em] text-[var(--secondary)]">
                             {canTeach ? 'Your courses' : 'Enrolled courses'}
@@ -298,23 +298,25 @@ export default function Dashboard() {
                                                     {item.kind === 'quiz' ? 'Q' : 'A'}
                                                 </span>
 
-                                                <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                                                    <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item?.title}</span>
-                                                    <span className="text-xs text-[var(--muted)]">
-                                                        {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
+                                                <div className="flex flex-col gap-2">
+                                                    <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                                                        <span className="truncate text-sm font-semibold text-[var(--shadow)] transition group-hover:text-[var(--main)]">{item?.title}</span>
+                                                        <span className="text-xs text-[var(--muted)]">
+                                                            {item.kind === 'quiz' ? 'Quiz' : 'Assignment'}
+                                                        </span>
                                                     </span>
-                                                    
+
+                                                    <span className={`inline-flex w-fit rounded-full bg-[var(--highlight)]/50 px-2.5 py-0.5 text-xs font-semibold text-[var(--secondary)] ${meta.className ?? ''}`}>
+                                                        {meta.label}
+                                                    </span>
+
                                                     {pending > 0 && (
                                                         <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--warning)]/15 px-2.5 py-0.5 text-xs font-semibold text-[var(--warning)]">
                                                             <span className="size-1.5 rounded-full bg-[var(--warning)]" aria-hidden="true" />
                                                             {pending} learner needs to be graded
                                                         </span>
                                                     )}
-                                                </span>
-
-                                                <span className={`shrink-0 rounded-full bg-[var(--highlight)]/50 px-3 py-1 text-xs font-semibold text-[var(--secondary)] ${meta.className ?? ''}`}>
-                                                    {meta.label}
-                                                </span>
+                                                </div>
                                             </Link>
                                         </li>
                                     );

@@ -1,15 +1,15 @@
 {
   "name": "edukatura",
   "version": "1.0.0",
-  "description": "",
+  "description": "A learning management system (LMS) where faculty publish courses, modules, assignments and quizzes, and learners enroll, turn in their work and track grades",
   "main": "index.js",
   "scripts": {
     "frontend": "cd frontend && npm run dev",
     "backend": "cd backend && npm run devStart",
     "start": "concurrently \"npm run frontend\" \"npm run backend\""
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["full-stack development", "mern", "learning management system", "lms"],
+  "author": "Alef Justin Loresca",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^10.0.5"

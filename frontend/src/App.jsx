@@ -1,7 +1,4 @@
 import { Navigate, Route, Routes } from 'react-router';
-
-import './style/base.css';
-
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './components/NotFound';
@@ -20,6 +17,8 @@ import CourseForm from './pages/forms/CourseForm';
 import ModuleForm from './pages/forms/ModuleForm';
 import AssignmentForm from './pages/forms/AssignmentForm';
 import QuizForm from './pages/forms/QuizForm';
+
+import './App.css';
 
 export default function App() {
     return (

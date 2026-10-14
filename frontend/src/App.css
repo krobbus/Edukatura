@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+    --main: #4682B4;
+    --secondary: #1E293B;
+    --headings: 'Playfair Display', serif;
+    --body: 'Montserrat', sans-serif;
+    --highlight: #0EA5E9;
+    --shadow: #161616;
+    --warning: #b8791c;
+    --danger: #cc3939;
+    --muted: #64748b;
+    --panel: #fff;
+    --page-bg: #EBF1F6;
+    --line: #69696a;
+}
+
+body {
+    background-color: var(--page-bg);
+    background-image:
+        linear-gradient(rgba(42, 107, 92, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42, 107, 92, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+body:has(.authCard) {
+    background: linear-gradient(to right, var(--shadow), var(--main), var(--shadow));
+}
+
+.requiredMarker {
+    color: var(--danger);
+    font-weight: 700;
+}
